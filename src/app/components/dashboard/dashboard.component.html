@@ -1,0 +1,4 @@
+<button (click)="logOut()">გასვლა</button>
+<div *ngIf="auth.userProfile$ | async as userProfile">
+  <h2>გამარჯობა, {{ userProfile.firstName }} {{ userProfile.lastName }}</h2>
+</div>

@@ -1,0 +1,35 @@
+<form class="registration-form" [formGroup]="loginForm" (ngSubmit)="login()">
+  <h2 class="form-title">შესვლა</h2>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>მეილი</mat-label>
+    <input matInput type="email" formControlName="email" />
+    <mat-error class="error-text" *ngIf="email?.hasError('required')"
+      >მეილი აუცილებელია</mat-error
+    >
+    <mat-error class="error-text" *ngIf="email?.hasError('email')"
+      >შეიყვანეთ სწორი მეილი</mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>პაროლი</mat-label>
+    <input matInput type="password" formControlName="password" />
+    <mat-error class="error-text" *ngIf="password?.hasError('required')"
+      >პაროლი აუცილებელია</mat-error
+    >
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="full-width"
+    [disabled]="!loginForm.valid"
+  >
+    შესვლა
+  </button>
+
+  <a routerLink="/register">რეგისტრაცია</a>
+
+  <p *ngIf="error" class="error-text">{{ error }}</p>
+</form>
