@@ -5,42 +5,39 @@
 >
   <h2 class="form-title">რეგისტრაცია</h2>
 
-  <mat-form-field appearance="fill" class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-label>სახელი</mat-label>
     <input matInput type="text" formControlName="firstName" />
-    <mat-error class="error-text" *ngIf="firstName?.hasError('required')"
-      >სახელი აუცილებელია</mat-error
-    >
+    @if(firstName?.hasError('required')){
+    <mat-error class="error-text">სახელი აუცილებელია</mat-error>
+    }
   </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-label>გვარი</mat-label>
     <input matInput type="text" formControlName="lastName" />
-    <mat-error class="error-text" *ngIf="lastName?.hasError('required')"
-      >გვარი აუცილებელია</mat-error
-    >
+    @if(lastName?.hasError('required')){
+    <mat-error class="error-text">გვარი აუცილებელია</mat-error>
+    }
   </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-label>მეილი</mat-label>
     <input matInput type="email" formControlName="email" />
-    <mat-error class="error-text" *ngIf="email?.hasError('required')"
-      >მეილი აუცილებელია</mat-error
-    >
-    <mat-error class="error-text" *ngIf="email?.hasError('email')"
-      >შეიყვანეთ სწორი მეილი</mat-error
-    >
+    @if(email?.hasError('required')){
+    <mat-error class="error-text">მეილი აუცილებელია</mat-error>
+    }@else if(email?.hasError('email')){
+    <mat-error class="error-text">შეიყვანეთ სწორი მეილი</mat-error>}
   </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-label>პაროლი</mat-label>
     <input matInput type="password" formControlName="password" />
-    <mat-error class="error-text" *ngIf="password?.hasError('required')"
-      >პაროლი აუცილებელია</mat-error
-    >
-    <mat-error class="error-text" *ngIf="password?.hasError('minlength')"
-      >პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო</mat-error
-    >
+    @if(password?.hasError('required')){
+    <mat-error class="error-text">პაროლი აუცილებელია</mat-error>
+    } @else if(password?.hasError('minlength')){
+    <mat-error class="error-text">პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო</mat-error
+    >}
   </mat-form-field>
 
   <button
@@ -54,5 +51,7 @@
 
   <a routerLink="/login">უკვე გაქვთ ანგარიში? შესვლა</a>
 
-  <p class="error-text" *ngIf="error" class="error-text">{{ error }}</p>
+  @if(error){
+  <p class="error-text" class="error-text">{{ error }}</p>
+  }
 </form>

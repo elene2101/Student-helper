@@ -10,6 +10,3 @@ export const environment = {
     measurementId: 'G-XSXNFL4JQC',
   },
 };
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);

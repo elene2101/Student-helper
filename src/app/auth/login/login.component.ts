@@ -24,12 +24,12 @@ export class LoginComponent {
   private router = inject(Router);
   private fb = inject(FormBuilder);
 
-  loginForm = this.fb.group({
+  public loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
 
-  error: string | null = null;
+  public error: string | null = null;
 
   get email() {
     return this.loginForm.get('email');
@@ -38,7 +38,7 @@ export class LoginComponent {
     return this.loginForm.get('password');
   }
 
-  async login() {
+  public async login() {
     if (!this.loginForm.valid) return;
 
     this.error = null;
@@ -49,7 +49,7 @@ export class LoginComponent {
     try {
       await this.auth.login(emailValue, passwordValue);
       this.router.navigate(['/dashboard']);
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       this.error = this.auth.mapFirebaseError(err);
     }

@@ -10,10 +10,11 @@ import { AsyncPipe, CommonModule } from '@angular/common';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
-  auth = inject(AuthService);
+  private auth = inject(AuthService);
   private router = inject(Router);
+  public userProfile$ = this.auth.userProfile$;
 
-  logOut() {
+  public logOut() {
     this.auth.logout().then(() => {
       this.router.navigate(['/login']);
     });

@@ -24,14 +24,14 @@ export class RegisterComponent {
   private router = inject(Router);
   private fb = inject(FormBuilder);
 
-  registrationForm = this.fb.group({
+  public registrationForm = this.fb.group({
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  error: string | null = null;
+  public error: string | null = null;
 
   get firstName() {
     return this.registrationForm.get('firstName');
@@ -46,7 +46,7 @@ export class RegisterComponent {
     return this.registrationForm.get('password');
   }
 
-  async register() {
+  public async register() {
     if (!this.registrationForm.valid) return;
 
     this.error = null;
@@ -68,7 +68,7 @@ export class RegisterComponent {
         emailValue
       );
       this.router.navigate(['/dashboard']);
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       this.error = this.auth.mapFirebaseError(err);
     }

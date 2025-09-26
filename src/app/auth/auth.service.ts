@@ -71,11 +71,8 @@ export class AuthService {
         return 'შეიყვანეთ სწორი მეილი';
       case 'auth/weak-password':
         return 'პაროლი ძალიან სუსტი არის';
-      case 'auth/user-not-found':
-      case 'auth/wrong-password':
-        return 'მეილი ან პაროლი არასწორია, სცადეთ თავიდან.';
       default:
-        return 'შეცდომა ავტორიზაციისას';
+        return 'მეილი ან პაროლი არასწორია, სცადეთ თავიდან.';
     }
   }
 }

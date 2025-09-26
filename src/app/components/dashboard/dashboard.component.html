@@ -1,4 +1,9 @@
 <button (click)="logOut()">გასვლა</button>
-<div *ngIf="auth.userProfile$ | async as userProfile">
-  <h2>გამარჯობა, {{ userProfile.firstName }} {{ userProfile.lastName }}</h2>
+@if(userProfile$ | async ){
+<div>
+  <h2>
+    გამარჯობა, {{ (userProfile$ | async)?.firstName }}
+    {{ (userProfile$ | async)?.lastName }}
+  </h2>
 </div>
+}
