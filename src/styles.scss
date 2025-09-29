@@ -1,3 +1,6 @@
+@import "tailwindcss";
+@import "./assets/styles/variables.scss";
+
 html,
 body {
   height: 100%;
@@ -5,6 +8,13 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:root {
+  @each $name, $color in $colors {
+    --#{$name}-color: #{$color};
+  }
+  --font-primary: "CredoFont, sans-serif";
 }
 
 input.mat-mdc-input-element:-webkit-autofill,

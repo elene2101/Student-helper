@@ -1,22 +1,10 @@
-import { Component, inject } from '@angular/core';
-import { AuthService } from '../../auth/auth.service';
-import { Router } from '@angular/router';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, AsyncPipe],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
+  styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent {
-  private auth = inject(AuthService);
-  private router = inject(Router);
-  public userProfile$ = this.auth.userProfile$;
-
-  public logOut() {
-    this.auth.logout().then(() => {
-      this.router.navigate(['/login']);
-    });
-  }
-}
+export class DashboardComponent {}

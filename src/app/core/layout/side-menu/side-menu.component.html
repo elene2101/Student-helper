@@ -1,0 +1,45 @@
+<mat-sidenav-container class="flex">
+  <mat-sidenav #sidenav class="font-bold text-xl" mode="side" [opened]="true">
+    <div class="menu-container pb-16 mt-8">
+      @for (item of menuItems; track item) {
+      <div
+        class="flex items-center h-14 ml-4 mb-2 cursor-pointer text-base font-medium menuItems"
+        [routerLink]="item.route"
+        [class.active]="shouldShowActive(item)"
+        (click)="expandMenuItem(item)"
+      >
+        <div>
+          <span class="ml-3">
+            {{ item.text }}
+          </span>
+        </div>
+        @if(item.children.length > 0){
+        <mat-icon class="mr-4 rotate-icon" [class.expanded]="item.isExpanded">
+          arrow_drop_down </mat-icon
+        >}
+      </div>
+
+      @if (item.isExpanded ) { @for (child of item.children; track child) {
+      <div class="flex relative ml-6">
+        <div class="relative w-4 line-dot-container">
+          <div
+            class="vertical-line absolute left-1/2 h-full"
+            [class.active]="isRouteActive(child.route)"
+          ></div>
+          <div class="dot" [class.active]="isRouteActive(child.route)"></div>
+        </div>
+        <div class="submenu-items ml-3 mb-2 font-medium text-sm">
+          <div
+            class="submenu-item cursor-pointer mt-2 px-4 py-2"
+            [class.active]="isRouteActive(child.route)"
+            [routerLink]="child.route"
+            routerLinkActive="active"
+          >
+            <span>{{ child.text }}</span>
+          </div>
+        </div>
+      </div>
+      } } }
+    </div>
+  </mat-sidenav>
+</mat-sidenav-container>

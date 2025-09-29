@@ -5,7 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  User,
+  UserInfo,
 } from '@angular/fire/auth';
 import { Firestore, doc, docData, setDoc } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
@@ -17,7 +17,7 @@ export class AuthService {
   private auth = inject(Auth);
   private firestore = inject(Firestore);
 
-  public user$: Observable<User | null> = authState(this.auth);
+  public user$: Observable<UserInfo | null> = authState(this.auth);
   public userProfile$ = this.user$.pipe(
     switchMap((user) => (user?.uid ? this.getUserProfile$(user.uid) : of(null)))
   );
@@ -44,6 +44,7 @@ export class AuthService {
     return setDoc(userDocRef, {
       firstName,
       lastName,
+      fullName: firstName + lastName,
       email,
       createdAt: new Date(),
     });

@@ -1,1 +1,18 @@
-<router-outlet></router-outlet>
+<div class="flex flex-col h-screen">
+  @if(showHeaderAndMenu){
+  <app-header class="fixed top-0 w-full z-50"></app-header>
+  }
+  <div class="flex pt-24 w-full">
+    @if(showHeaderAndMenu){
+
+    <app-side-menu class="side-menu-container transition-all duration-300 z-10">
+    </app-side-menu>
+    }
+
+    <main class="flex-1 overflow-x-hidden transition-all duration-300">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

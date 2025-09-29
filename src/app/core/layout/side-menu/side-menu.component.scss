@@ -1,0 +1,115 @@
+mat-sidenav {
+  background-color: rgb(162, 162, 255) opacity($color: #000000);
+  color: black;
+  line-height: 24px;
+  position: fixed;
+  border-radius: 0;
+  top: 96px;
+  height: calc(100vh - 96px);
+  width: 300px;
+}
+
+.menuItems {
+  line-height: 20px;
+  border-radius: 32px;
+  display: flex;
+  justify-content: space-between;
+  transition: width 0.3s ease-in-out;
+
+  .menu-content {
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+    width: 100%;
+
+    img {
+      flex-shrink: 0;
+    }
+
+    span {
+      transition: opacity 0.3s ease-in-out;
+    }
+  }
+
+  &:hover,
+  &.active {
+    background-color: var(--primary-color);
+    color: #fff;
+    img {
+      filter: brightness(0) invert(1);
+    }
+  }
+
+  .rotate-icon {
+    transition: transform 0.3s ease;
+    &.expanded {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.line-dot-container {
+  .vertical-line {
+    transform: translateX(-50%);
+    width: 2px;
+    background-color: #e6eef2;
+    transition: background-color 0.4s ease;
+
+    &.active {
+      background-color: var(--primary-color);
+    }
+  }
+
+  .dot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+}
+
+.submenu-items {
+  .submenu-item {
+    color: black;
+    line-height: 20px;
+    transition: color 0.3s ease;
+
+    &.active,
+    &:hover {
+      background-color: #1e6e911a;
+      border-radius: 32px;
+    }
+  }
+}
+
+.submenu-item:first-child {
+  margin: 0 !important;
+}
+
+.mat-sidenav {
+  transition: width 0.3s ease-in-out;
+}
+
+.menu-text-container {
+  opacity: 1;
+  width: auto;
+  transition: opacity 0.3s ease-in-out;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.menu-container {
+  overflow-x: hidden;
+  transition: width 0.3s ease-in-out;
+}

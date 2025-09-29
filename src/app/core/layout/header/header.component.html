@@ -1,0 +1,41 @@
+<div class="header flex flex-row justify-between items-center p-8">
+  <div
+    class="header-container flex flex-row justify-between items-center w-full"
+  >
+    <div class="flex items-center">
+      <img
+        src="../../../../assets/png/logo.png"
+        alt="logo"
+        class="w-[100px] h-[100px] cursor-pointer"
+        routerLink=""
+      />
+    </div>
+
+    <div class="flex flex-row items-center gap-4">
+      <div class="flex flex-row items-center gap-4">
+        <img
+          src="../../../../assets/svg/notifications.svg"
+          alt="notifications icon"
+          class="w-8 h-8 cursor-pointer"
+        />
+      </div>
+      <div
+        class="w-10 h-10 rounded-full flex items-center justify-center font-medium user text-base cursor-pointer"
+        [matTooltip]="
+        `${(userProfile$ | async)?.firstName } ${ (userProfile$ | async)?.lastName }`
+        || ''
+        "
+      >
+        {{ (userProfile$ | async)?.firstName?.charAt(0)
+        }}{{ (userProfile$ | async)?.lastName?.charAt(0) }}
+      </div>
+
+      <img
+        src="../../../../assets/svg/logout.svg"
+        alt="logout icon"
+        class="w-8 h-8 cursor-pointer"
+        (click)="logOut()"
+      />
+    </div>
+  </div>
+</div>

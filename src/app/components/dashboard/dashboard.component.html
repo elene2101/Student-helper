@@ -1,9 +1,0 @@
-<button (click)="logOut()">გასვლა</button>
-@if(userProfile$ | async ){
-<div>
-  <h2>
-    გამარჯობა, {{ (userProfile$ | async)?.firstName }}
-    {{ (userProfile$ | async)?.lastName }}
-  </h2>
-</div>
-}

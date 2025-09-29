@@ -1,16 +1,16 @@
 <form class="registration-form" [formGroup]="loginForm" (ngSubmit)="login()">
   <h2 class="form-title">შესვლა</h2>
 
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>მეილი</mat-label>
-    <input matInput type="email" formControlName="email" />
+    <input matInput type="fill" formControlName="email" />
     @if(email?.hasError('required')){
     <mat-error class="error-text">მეილი აუცილებელია</mat-error>
     } @else if(email?.hasError('email')){
     <mat-error class="error-text">შეიყვანეთ სწორი მეილი</mat-error>}
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>პაროლი</mat-label>
     <input matInput type="password" formControlName="password" />
     @if(password?.hasError('required')){

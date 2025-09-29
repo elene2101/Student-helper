@@ -17,7 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
     RouterModule,
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   private auth = inject(AuthService);
