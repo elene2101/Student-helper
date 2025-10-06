@@ -1,0 +1,42 @@
+<h2>📚 Assignments</h2>
+
+<!-- Add New -->
+<form (ngSubmit)="addAssignment()">
+  <input
+    [(ngModel)]="newAssignment.subject"
+    name="subject"
+    placeholder="Subject"
+    required
+  />
+  <input
+    [(ngModel)]="newAssignment.description"
+    name="description"
+    placeholder="Description"
+  />
+  <input
+    [(ngModel)]="newAssignment.deadline"
+    name="deadline"
+    type="date"
+    required
+  />
+  <button type="submit">➕ Add</button>
+</form>
+
+<hr />
+
+<!-- List Assignments -->
+<!-- <ul>
+  @for(a of assignments$ | async; track a){
+  <li>
+    <input
+      type="checkbox"
+      [checked]="a.completed"
+      (change)="toggleComplete(a)"
+    />
+    <strong [class.done]="a.completed">{{ a.subject }}</strong> -
+    {{ a.description }}
+    <small>(due: {{ a.deadline }})</small>
+    <button (click)="deleteAssignment(a.id!)">❌</button>
+  </li>
+  } -->
+<!-- </ul> -->

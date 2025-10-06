@@ -1,0 +1,277 @@
+// ფლეისჰოლდერები
+.mat-mdc-form-field {
+  .mat-mdc-input-element::placeholder,
+  .mat-mdc-select-placeholder,
+  .mat-mdc-form-field-placeholder {
+    color: #00000061 !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+  }
+  .mat-mdc-select-placeholder {
+    color: #00000061 !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+  }
+}
+
+mat-dialog-content {
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  --scrollbar-track-color: #e6eef2;
+}
+
+.mdc-dialog--open .mat-mdc-dialog-surface,
+.mdc-dialog--closing .mat-mdc-dialog-surface {
+  background-color: white;
+
+  --scrollbar-margin-top: 15px;
+  --scrollbar-margin-bottom: 15px;
+}
+
+// ინფუთების სტილი
+.mdc-notched-outline__leading,
+.mdc-notched-outline__notch,
+.mdc-notched-outline__trailing {
+  border-color: transparent !important;
+}
+
+.mat-mdc-text-field-wrapper {
+  border-radius: 16px !important;
+  background-color: #0000000a !important;
+}
+
+.mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+mat-error {
+  margin-top: -15px;
+  margin-bottom: 16px;
+  margin-left: 8px;
+}
+
+.mat-mdc-form-field {
+  max-height: 44px !important;
+
+  &.mat-form-field-invalid {
+    .mat-mdc-text-field-wrapper {
+      background-color: #e53e331a !important;
+    }
+  }
+
+  .mat-mdc-form-field-flex {
+    display: flex !important;
+    align-items: center !important;
+    height: 44px !important;
+  }
+  .mat-mdc-select-value {
+    overflow: hidden !important;
+
+    .mat-mdc-select-value-text {
+      white-space: normal !important;
+      word-break: break-word !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 2 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+  }
+
+  .mat-mdc-text-field-wrapper {
+    background-color: #f4f8f9 !important;
+    border-radius: 16px;
+    padding: 0 16px !important;
+    height: 48px !important;
+  }
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: transparent !important;
+  }
+
+  &.mat-focused {
+    .mat-mdc-text-field-wrapper {
+      border: 1px solid var(--primary-light-color);
+      border-radius: 16px;
+    }
+  }
+}
+
+// სელექტ ინფუთის ჩამოსაშლელი პანელის სტილი
+.cdk-overlay-container {
+  .mdc-menu-surface.mat-mdc-select-panel,
+  div.mat-mdc-autocomplete-panel,
+  .mat-timepicker-panel {
+    background: white !important;
+    max-height: 330px !important;
+    border-radius: 16px !important;
+    padding: 8px !important;
+    font-size: 14px !important;
+
+    --scrollbar-margin-top: 10px;
+    --scrollbar-margin-bottom: 10px;
+
+    .mat-mdc-option {
+      min-height: 46px !important;
+      padding: 8px !important;
+      border-radius: 8px !important;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+
+      &:last-child {
+        border-bottom: none !important;
+      }
+
+      &.mat-mdc-option-active {
+        background-color: rgba(0, 0, 0, 0.08) !important;
+      }
+
+      .mdc-list-item__primary-text {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        color: rgba(0, 0, 0, 0.87) !important;
+      }
+    }
+  }
+  .mat-mdc-form-field-flex {
+    display: flex !important;
+    align-items: center !important;
+    height: 48px !important;
+  }
+}
+
+//სელექტ ინფუთში სერჩის სტილი
+.cdk-overlay-container {
+  .mdc-menu-surface.mat-mdc-select-panel {
+    .ngx-mat-select-search {
+      .mat-mdc-form-field {
+        height: 48px !important;
+
+        .mat-mdc-text-field-wrapper {
+          background-color: #f4f8f9 !important;
+          height: 48px !important;
+          border-radius: 8px !important;
+        }
+
+        .mat-mdc-form-field-flex {
+          height: 48px !important;
+          padding: 0 !important;
+        }
+
+        input.mat-mdc-input-element {
+          height: 48px !important;
+          margin: 0 !important;
+          padding: 0 16px !important;
+          font-size: 14px !important;
+        }
+      }
+
+      .mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+      }
+    }
+
+    .mat-select-search-input {
+      background-color: #f4f8f9 !important;
+      border-radius: 32px !important;
+      margin: 12px !important;
+      width: calc(100% - 24px) !important;
+      border-bottom: none !important;
+    }
+
+    .mat-select-search-inner {
+      background-color: white !important;
+    }
+
+    .mat-select-search-clear {
+      top: 15px !important;
+      right: 15px !important;
+    }
+  }
+}
+
+// რადიო ჯგუფი რომელსაც არ აქვს პადინგი
+.custom-radio-group {
+  .mat-mdc-radio-button .mdc-radio {
+    padding: 0;
+  }
+
+  .mdc-label {
+    font-size: 16px;
+    padding-left: 8px;
+    letter-spacing: 0px;
+  }
+}
+
+//კალენდრის ინფუთის სტილი
+.cdk-overlay-container {
+  .mat-datepicker-popup {
+    background: white !important;
+    border-radius: 16px !important;
+    padding: 4px !important;
+    border: 1px solid var(--primary-light-color) !important;
+
+    .mat-calendar {
+      background: white !important;
+      width: 300px;
+
+      .mat-calendar-header {
+        padding-bottom: 4px;
+
+        .mat-calendar-controls {
+          margin: 4px !important;
+
+          .mat-calendar-previous-button,
+          .mat-calendar-next-button {
+            color: var(--primary-color) !important;
+          }
+        }
+      }
+
+      .mat-calendar-body {
+        .mat-calendar-body-cell {
+          .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
+              .mat-calendar-body-comparison-identical
+            ) {
+            color: var(--primary-color) !important;
+          }
+
+          &.mat-calendar-body-disabled {
+            pointer-events: none !important;
+
+            .mat-calendar-body-cell-content {
+              background-color: rgba(255, 3, 3, 0.107) !important;
+              text-decoration: line-through !important;
+            }
+          }
+        }
+      }
+    }
+    .mat-calendar-body-cell-content {
+      &.mat-calendar-body-selected {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+      }
+    }
+  }
+}
+
+// სელექთის აიქონის მიხედვით მატსუფიქს აიქონების/ ასევე დეითფიქერის აიქონების გასტილვა
+.custom-icon .mat-mdc-form-field-icon-prefix > .mat-icon,
+.custom-icon .mat-mdc-form-field-icon-suffix > .mat-icon {
+  position: relative;
+  padding: 0 !important;
+  left: 8px;
+  scale: 0.8;
+}
+
+.custom-icon .mat-mdc-icon-button {
+  position: relative;
+  padding: 0 !important;
+  left: 16px;
+  scale: 0.8;
+}

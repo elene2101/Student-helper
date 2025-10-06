@@ -1,0 +1,83 @@
+<div class="flex gap-8 p-6 h-full">
+  <div class="w-1/2 flex flex-col h-full">
+    <mat-tab-group class="flex-1 overflow-hidden">
+      <mat-tab label="მიმდინარე" class="py-4">
+        <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
+          @for(class of upcomingSchedules$ | async; track class.id) {
+
+          <li class="p-5 rounded-xl bg-white flex justify-between shadow-xl">
+            <div class="flex flex-col gap-1">
+              <h1 class="font-semibold text-lg">
+                {{ getSubjectName(class.subjectId, (subjects$ | async)!) }}
+              </h1>
+              <p class="text-gray-400 text-sm">
+                {{ class.startDate | date : "shortDate" }} -
+                {{ class.endDate | date : "shortDate" }}
+              </p>
+              <p class="text-gray-600">
+                ⏰ {{ class.startTime | date : "shortTime" }} -
+                {{ class.endTime | date : "shortTime" }}
+              </p>
+              <p class="text-gray-600">
+                🔁 {{ getRecurrenceLabel(class.recurrence, class.weekDays) }}
+              </p>
+
+              <p class="text-gray-600">
+                {{ class.mode === "online" ? "💻 ონლაინ" : "🏫 კამპუსი" }}
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <button class="edit-btn" (click)="openScheduleComponent(class)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button (click)="deleteSchedule(class.id!)" class="delete-btn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </li>
+          }
+        </ul>
+      </mat-tab>
+      <mat-tab label="დასრულებული">
+        <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
+          @for(class of pastSchedules$ | async; track class.id) {
+          <li class="p-5 rounded-xl bg-white flex justify-between shadow-xl">
+            <div class="flex flex-col gap-1">
+              <h1 class="font-semibold text-lg">
+                {{ getSubjectName(class.subjectId, (subjects$ | async)!) }}
+              </h1>
+              <p class="text-gray-400 text-sm">
+                {{ class.startDate | date }} - {{ class.endDate | date }}
+              </p>
+              <p class="text-gray-600">
+                ⏰ {{ class.startTime | date : "shortTime" }} -
+                {{ class.endTime | date : "shortTime" }}
+              </p>
+              <p class="text-gray-600">
+                🔁 {{ getRecurrenceLabel(class.recurrence, class.weekDays) }}
+              </p>
+
+              <p class="text-gray-600">
+                {{ class.mode === "online" ? "💻 ონლაინ" : "🏫 კამპუსი" }}
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <button class="edit-btn" (click)="openScheduleComponent(class)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button (click)="deleteSchedule(class.id!)" class="delete-btn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </li>
+          }
+        </ul>
+      </mat-tab>
+    </mat-tab-group>
+    <button (click)="openScheduleComponent()" class="w-58 primary-btn mt-1">
+      + კლასის დამატება
+    </button>
+  </div>
+
+  <app-subjects class="w-1/2 px-6 h-full"></app-subjects>
+</div>

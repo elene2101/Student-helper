@@ -1,0 +1,84 @@
+<div class="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
+  <h2 class="text-2xl font-bold mb-4 text-gray-800">საგნების მართვა</h2>
+
+  @if(!showAddInput){
+  <button (click)="toggleAddInput()" class="mb-4 w-52 primary-btn">
+    + საგნის დამატება
+  </button>
+
+  } @if(showAddInput){
+  <form [formGroup]="newSubjectForm" class="mb-4 flex flex-col">
+    <mat-form-field appearance="outline" class="mb-4">
+      <input
+        matInput
+        formControlName="name"
+        placeholder="შეიყვანეთ საგნის სახელი"
+      />
+    </mat-form-field>
+
+    @if(newSubjectForm.controls.name.invalid &&
+    newSubjectForm.controls.name.touched){
+    <mat-error> საგნის სახელი სავალდებულოა </mat-error>
+    }
+
+    <div class="flex gap-8 items-center">
+      <button
+        (click)="addSubject()"
+        [disabled]="newSubjectForm.invalid"
+        class="w-[256px] primary-btn"
+      >
+        დამატება
+      </button>
+      <button (click)="toggleAddInput()" class="w-[256px] secondary-btn">
+        გაუქმება
+      </button>
+    </div>
+  </form>
+  }
+
+  <ul class="space-y-4">
+    @for( subject of subjects$ | async; track subject.id){
+
+    <li class="flex justify-between items-center p-3 rounded shadow">
+      <div class="w-full flex items-center">
+        @if(editingId === subject.id){
+        <form [formGroup]="editForm" class="w-full mr-4">
+          <mat-form-field appearance="outline" class="w-full">
+            <input
+              matInput
+              formControlName="name"
+              placeholder="შეიყვანეთ საგნის სახელი"
+            />
+          </mat-form-field>
+        </form>
+        } @if(editingId !== subject.id){
+        <span>{{ subject.name }}</span
+        >}
+      </div>
+
+      @if(!subject.isPublic){
+      <div class="flex gap-2">
+        @if(editingId !== subject.id){
+        <button (click)="startEdit(subject)" class="edit-btn">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button (click)="deleteSubject(subject)" class="delete-btn">
+          <mat-icon>delete</mat-icon>
+        </button>
+        } @if(editingId === subject.id){
+
+        <button
+          (click)="saveEdit(subject)"
+          [disabled]="editForm.invalid"
+          class="primary-btn"
+        >
+          შენახვა
+        </button>
+        <button (click)="cancelEdit()" class="secondary-btn">გაუქმება</button>
+        }
+      </div>
+      }
+    </li>
+    }
+  </ul>
+</div>

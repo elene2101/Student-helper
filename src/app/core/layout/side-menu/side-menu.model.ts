@@ -22,9 +22,9 @@ export const MenuItems: MenuItem[] = [
     isExpanded: false,
     route: 'activites',
     children: [
-      { text: 'კლასები', route: '' },
-      { text: 'გამოცდები', route: '' },
-      { text: 'დავალებები', route: '' },
+      { text: 'კლასები', route: 'classes' },
+      { text: 'გამოცდები', route: 'bla' },
+      { text: 'დავალებები', route: 'assignments' },
     ],
   },
 ];

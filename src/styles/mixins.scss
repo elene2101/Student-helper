@@ -1,0 +1,103 @@
+@mixin primary-button {
+  background-color: var(--primary-color);
+  font-weight: 700px;
+  color: white;
+  font-size: 16px;
+  border-radius: 30px;
+  padding: 12px 14px;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background-color: darken(#4e4e83, 5%);
+  }
+  &:disabled {
+    background-color: var(--primary-light-color);
+    cursor: default;
+  }
+}
+
+@mixin secondary-button {
+  background-color: var(--background-color);
+  color: black;
+  font-weight: 700px;
+  font-size: 16px;
+  border-radius: 30px;
+  padding: 12px 14px;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background-color: darken(#e5e5e5, 5%);
+  }
+}
+
+@mixin custom-radio {
+  .mat-mdc-radio-button {
+    --mdc-radio-unselected-hover-icon-color: #cccccc;
+    --mdc-radio-unselected-icon-color: #cccccc;
+    --mdc-radio-unselected-pressed-icon-color: #cccccc;
+    --mdc-radio-selected-focus-icon-color: var(--primary-light-color);
+    --mdc-radio-selected-hover-icon-color: var(--primary-light-color);
+    --mdc-radio-selected-icon-color: var(--primary-light-color);
+    --mdc-radio-selected-pressed-icon-color: var(--primary-light-color);
+
+    .mdc-radio {
+      .mdc-radio__background {
+        .mdc-radio__outer-circle {
+          border-width: 2px !important;
+          border-color: #cccccc !important;
+        }
+
+        .mdc-radio__inner-circle {
+          transform: scale(0) !important;
+        }
+      }
+    }
+
+    &.mat-mdc-radio-checked {
+      .mdc-radio__background {
+        .mdc-radio__outer-circle {
+          border-color: var(--primary-light-color) !important;
+        }
+
+        .mdc-radio__inner-circle {
+          transform: scale(0.6) !important;
+          background-color: var(--primary-light-color) !important;
+        }
+      }
+    }
+  }
+  .mdc-radio__ripple,
+  .mat-ripple-element,
+  .mat-radio-ripple,
+  .mdc-radio__background::before {
+    display: none !important;
+  }
+}
+
+@mixin custom-checkbox {
+  .mat-mdc-checkbox {
+    .mdc-checkbox {
+      width: 20px !important;
+      height: 20px !important;
+
+      .mdc-checkbox__background {
+        border-radius: 6px !important;
+      }
+    }
+
+    &.mat-mdc-checkbox-checked {
+      .mdc-checkbox__background {
+        background-color: var(--primary-light-color) !important;
+        border-color: var(--primary-light-color) !important;
+      }
+    }
+
+    .mdc-checkbox__ripple {
+      display: none !important;
+    }
+
+    .mdc-checkbox__focus-ring {
+      display: none !important;
+    }
+  }
+}

@@ -1,0 +1,148 @@
+<div class="flex justify-between items-center p-6">
+  <h2 class="text-2xl font-bold">კლასის დაგეგმვა</h2>
+  <button
+    type="button"
+    class="w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 cursor-pointer rounded-full"
+    (click)="dialogRef.close()"
+  >
+    <mat-icon class="text-darker-blue !h-6 !w-6">close</mat-icon>
+  </button>
+</div>
+
+@if(isLoading){
+<div class="absolute inset-0 flex items-center justify-center z-50">
+  <mat-progress-spinner
+    mode="indeterminate"
+    diameter="60"
+    color="primary"
+  ></mat-progress-spinner>
+</div>
+}
+
+<form [formGroup]="scheduleForm" class="flex justify-between flex-col p-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+    <mat-form-field appearance="outline">
+      <mat-select formControlName="subjectId" placeholder="საგანი">
+        <mat-form-field appearance="outline" class="w-full mb-4">
+          <input
+            matInput
+            [formControl]="subjectFilterCtrl"
+            placeholder="ძიება"
+          />
+        </mat-form-field>
+        @for(subject of filteredSubjects$ | async; track subject.id){
+        <mat-option [value]="subject.id">
+          {{ subject.name }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      id="campaigns-dashboard-page--sendDateFrom-form-field"
+    >
+      <input
+        matInput
+        [matDatepicker]="pickerFrom"
+        formControlName="startDate"
+        placeholder="დაწყების თარიღი"
+      />
+      <!-- [max]="maxFromDate()"
+          (dateInput)="handleDateChange($event, true)" -->
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="pickerFrom"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #pickerFrom></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      id="campaigns-dashboard-page--sendDateFrom-form-field"
+    >
+      <input
+        matInput
+        [matDatepicker]="pickerTo"
+        formControlName="endDate"
+        placeholder="დასრულების თარიღი"
+      />
+      <!-- [max]="maxFromDate()"
+          (dateInput)="handleDateChange($event, true)" -->
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="pickerTo"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #pickerTo></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        [matTimepicker]="startTimePicker"
+        formControlName="startTime"
+        placeholder="დაწყების დრო"
+      />
+      <mat-timepicker-toggle matIconSuffix [for]="startTimePicker" />
+      <mat-timepicker #startTimePicker />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        [matTimepicker]="endTimePicker"
+        formControlName="endTime"
+        placeholder="დასრულების დრო"
+      />
+      <mat-timepicker-toggle matIconSuffix [for]="endTimePicker" />
+      <mat-timepicker #endTimePicker />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-select formControlName="recurrence" placeholder="გამეორება">
+        <mat-option value="none"> ერთჯერადი </mat-option>
+        <mat-option value="daily"> ყოველდღე </mat-option>
+        <mat-option value="weekly"> ყოველკვირა </mat-option>
+        <mat-option value="monthly"> ყოველთვე </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div>
+      <label class="form-label">ადგილი</label>
+      <mat-radio-group formControlName="mode" class="flex flex-col gap-2">
+        <mat-radio-button value="online">💻 ონლაინ</mat-radio-button>
+        <mat-radio-button value="campus">🏫 კამპუსში</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    @if (scheduleForm.get('recurrence')?.value === 'weekly') {
+    <div>
+      <label class="form-label font-semibold">აირჩიე კვირის დღეები:</label>
+      <div class="flex flex-wrap gap-1">
+        @for (day of weekDays; track day.key) {
+        <mat-checkbox
+          (change)="onDayToggle(day.key, $event)"
+          [checked]="weekDaysArray.value.includes(day.key)"
+          color="primary"
+        >
+          {{ day.label }}
+        </mat-checkbox>
+        }
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="absolute bottom-4 w-[96%] flex justify-between">
+    <button class="secondary-btn" type="button" (click)="dialogRef.close()">
+      გაუქმება
+    </button>
+    <button
+      (click)="saveSchedule()"
+      class="primary-btn"
+      [disabled]="scheduleForm.invalid || isLoading"
+    >
+      {{ data?.id ? "შენახვა" : "დამატება" }}
+    </button>
+  </div>
+</form>
