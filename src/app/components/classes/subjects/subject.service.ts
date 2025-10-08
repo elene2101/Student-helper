@@ -12,13 +12,7 @@ import {
 } from '@angular/fire/firestore';
 import { Auth, authState } from '@angular/fire/auth';
 import { Observable, combineLatest, map, switchMap } from 'rxjs';
-
-export interface Subject {
-  id?: string;
-  name: string;
-  userId?: string | null;
-  isPublic: boolean;
-}
+import { Subject } from '../classes.model';
 
 @Injectable({ providedIn: 'root' })
 export class SubjectsService {

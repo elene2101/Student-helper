@@ -11,6 +11,13 @@ export interface ClassSchedule {
   mode: 'online' | 'campus';
 }
 
+export interface Subject {
+  id?: string;
+  name: string;
+  userId?: string | null;
+  isPublic: boolean;
+}
+
 export const WeekDays = [
   { key: 'monday', label: 'ორშაბათი' },
   { key: 'tuesday', label: 'სამშაბათი' },

@@ -1,0 +1,30 @@
+:host ::ng-deep .toast-container .ngx-toastr {
+  border-radius: 4px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  min-width: 450px;
+  box-shadow: none;
+}
+
+.toast-success {
+  background-color: #b0eaab !important;
+  color: #4d7a4a !important;
+  font-weight: 700 !important;
+}
+
+.toast-warning {
+  background-color: #e8d6a7 !important;
+  color: #996f00 !important;
+  font-weight: 700 !important;
+}
+
+.toast-error {
+  background-color: #f69c98 !important;
+  color: #b62217 !important;
+  font-weight: 700 !important;
+}
+
+:host ::ng-deep .toast-close-button {
+  color: black;
+}

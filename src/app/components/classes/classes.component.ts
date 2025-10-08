@@ -1,15 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
-import { ClassScheduleService } from './class-schedule/class-schedule.service';
+import { ClassScheduleService } from './classes.service';
 import { Observable, map } from 'rxjs';
-import { ClassSchedule, WeekDays } from './class-schedule/class-schedule.model';
+import { ClassSchedule, Subject, WeekDays } from './classes.model';
 import { SubjectsComponent } from './subjects/subjects.component';
 import { ClassScheduleComponent } from './class-schedule/class-schedule.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, SubjectsService } from './subjects/subject.service';
+import { SubjectsService } from './subjects/subject.service';
 
 @Component({
   selector: 'app-classes',

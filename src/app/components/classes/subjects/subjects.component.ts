@@ -7,10 +7,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Subject, SubjectsService } from './subject.service';
+import { SubjectsService } from './subject.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { Subject } from '../classes.model';
 
 @Component({
   selector: 'app-subjects',

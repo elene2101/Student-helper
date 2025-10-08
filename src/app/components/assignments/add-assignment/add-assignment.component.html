@@ -1,0 +1,93 @@
+<h2 class="text-2xl font-bold m-2">
+  {{ assignmentData()?.id ? "დავალების რედაქტირება" : "დავალების დამატება" }}
+</h2>
+
+@if (isLoading) {
+<div class="absolute inset-0 flex items-center justify-center z-50 bg-white/50">
+  <mat-progress-spinner
+    mode="indeterminate"
+    diameter="60"
+    color="primary"
+  ></mat-progress-spinner>
+</div>
+}
+
+<form
+  [formGroup]="assignmentForm"
+  (ngSubmit)="saveSchedule()"
+  class="mt-4 flex justify-between flex-col relative p-4"
+>
+  <div class="flex flex-col gap-4">
+    <mat-form-field appearance="outline">
+      <mat-select formControlName="subjectId" placeholder="საგანი">
+        <mat-form-field appearance="outline" class="w-full mb-4">
+          <input
+            matInput
+            [formControl]="subjectFilterCtrl"
+            placeholder="ძიება"
+          />
+        </mat-form-field>
+        @for(subject of filteredSubjects$ | async; track subject.id){
+        <mat-option [value]="subject.id">{{ subject.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <quill-editor
+      [modules]="quillModules"
+      formControlName="description"
+      placeholder="აღწერა"
+      class="h-32"
+    >
+    </quill-editor>
+    <div class="w-full mt-12 flex gap-8">
+      <mat-form-field appearance="outline" class="w-1/2">
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="deadline"
+          placeholder="შესრულების ბოლო ვადა"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-1/2">
+        <input
+          matInput
+          [matTimepicker]="timePicker"
+          formControlName="deadlineTime"
+          placeholder="დრო"
+        />
+        <mat-timepicker-toggle matIconSuffix [for]="timePicker" />
+        <mat-timepicker #timePicker />
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-select
+        formControlName="type"
+        placeholder="ტიპი (არჩევა არ არის სავალდებულო)"
+      >
+        @for(type of assignmentsType; track type){
+        <mat-option [value]="type">{{ type }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="w-full p-2 flex justify-between mt-8">
+    <button type="button" class="secondary-btn" (click)="closeAddAssignment()">
+      გაუქმება
+    </button>
+    <button
+      type="submit"
+      class="primary-btn"
+      [disabled]="assignmentForm.invalid || isLoading"
+    >
+      {{ assignmentData()?.id ? "შენახვა" : "დამატება" }}
+    </button>
+  </div>
+</form>

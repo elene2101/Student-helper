@@ -9,10 +9,10 @@ import {
   FormsModule,
   FormControl,
 } from '@angular/forms';
-import { combineLatest, map, Observable, startWith } from 'rxjs';
-import { Subject, SubjectsService } from '../subjects/subject.service';
-import { ClassSchedule, WeekDays } from './class-schedule.model';
-import { ClassScheduleService } from './class-schedule.service';
+import { combineLatest, map, Observable, startWith, take } from 'rxjs';
+import { SubjectsService } from '../subjects/subject.service';
+import { ClassSchedule, Subject, WeekDays } from '../classes.model';
+import { ClassScheduleService } from '../classes.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
@@ -22,6 +22,7 @@ import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-class-schedule',
@@ -45,6 +46,7 @@ export class ClassScheduleComponent {
   private fb = inject(FormBuilder);
   private scheduleService = inject(ClassScheduleService);
   private subjectsService = inject(SubjectsService);
+  private toast = inject(ToastrService);
   public dialogRef = inject(MatDialogRef<ClassScheduleComponent>);
 
   public isLoading = false;
@@ -53,6 +55,8 @@ export class ClassScheduleComponent {
   public subjects$!: Observable<Subject[]>;
   public subjectFilterCtrl: FormControl = new FormControl('');
   public filteredSubjects$!: Observable<Subject[]>;
+  public minEndDate: Date | null = null;
+  public maxStartDate: Date | null = null;
 
   public scheduleForm: FormGroup = this.fb.group({
     subjectId: [null, Validators.required],
@@ -67,15 +71,7 @@ export class ClassScheduleComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ClassSchedule | null) {
     if (data) {
-      this.scheduleForm.patchValue({
-        subjectId: data.subjectId,
-        startDate: data.startDate,
-        endDate: data.endDate,
-        startTime: data.startTime,
-        endTime: data.endTime,
-        recurrence: data.recurrence,
-        mode: data.mode,
-      });
+      this.scheduleForm.patchValue(data);
 
       const weekDaysArray = this.scheduleForm.get('weekDays') as FormArray;
       data.weekDays?.forEach((day) => weekDaysArray.push(this.fb.control(day)));
@@ -84,8 +80,6 @@ export class ClassScheduleComponent {
 
   ngOnInit() {
     this.schedules$ = this.scheduleService.getSchedules$();
-    this.subjects$ = this.subjectsService.getSubjects$();
-
     this.subjects$ = this.subjectsService.getSubjects$();
 
     this.filteredSubjects$ = combineLatest([
@@ -121,23 +115,54 @@ export class ClassScheduleComponent {
       return;
     }
 
-    const formValue = this.scheduleForm.value as ClassSchedule;
+    const formValue = this.scheduleForm.value;
     this.isLoading = true;
 
-    let saveObservable: Promise<any>;
-
-    if (this.data?.id) {
-      saveObservable = this.scheduleService.updateSchedule(
-        this.data.id,
-        formValue
-      );
-    } else {
-      saveObservable = this.scheduleService.addSchedule(formValue);
+    if (this.data?.id && this.data.subjectId === formValue.subjectId) {
+      this.scheduleService
+        .updateSchedule(this.data.id, formValue)
+        .then(() => this.dialogRef.close())
+        .catch((err) => console.error('შენახვა ვერ მოხერხდა', err))
+        .finally(() => (this.isLoading = false));
+      return;
     }
 
-    saveObservable
-      .then(() => this.dialogRef.close())
-      .catch((err) => console.error('შენახვა ვერ მოხერხდა', err))
-      .finally(() => (this.isLoading = false));
+    this.scheduleService
+      .checkDuplicateActiveSchedule(formValue.subjectId)
+      .pipe(take(1))
+      .subscribe((exists) => {
+        if (exists) {
+          this.isLoading = false;
+          this.toast.error('ამ საგანზე უკვე ხართ დარეგისტრილებული.');
+          return;
+        }
+
+        const saveObservable = this.data?.id
+          ? this.scheduleService.updateSchedule(this.data.id, formValue)
+          : this.scheduleService.addSchedule(formValue);
+
+        saveObservable
+          .then(() => this.dialogRef.close())
+          .catch((err) => console.error('შენახვა ვერ მოხერხდა', err))
+          .finally(() => (this.isLoading = false));
+      });
+  }
+
+  public onStartDateChange(start: Date) {
+    this.minEndDate = start;
+
+    const end = this.scheduleForm.get('endDate')?.value;
+    if (end && end < start) {
+      this.scheduleForm.get('endDate')?.setValue(null);
+    }
+  }
+
+  public onEndDateChange(end: Date) {
+    this.maxStartDate = end;
+
+    const start = this.scheduleForm.get('startDate')?.value;
+    if (start && start > end) {
+      this.scheduleForm.get('startDate')?.setValue(null);
+    }
   }
 }

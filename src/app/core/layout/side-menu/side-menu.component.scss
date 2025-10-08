@@ -7,6 +7,7 @@ mat-sidenav {
   top: 96px;
   height: calc(100vh - 96px);
   width: 300px;
+  padding-right: 12px;
 }
 
 .menuItems {
@@ -15,16 +16,11 @@ mat-sidenav {
   display: flex;
   justify-content: space-between;
   transition: width 0.3s ease-in-out;
-
   .menu-content {
     display: flex;
     align-items: center;
     transition: transform 0.3s ease-in-out;
     width: 100%;
-
-    img {
-      flex-shrink: 0;
-    }
 
     span {
       transition: opacity 0.3s ease-in-out;

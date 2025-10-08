@@ -38,18 +38,15 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field
-      appearance="outline"
-      id="campaigns-dashboard-page--sendDateFrom-form-field"
-    >
+    <mat-form-field appearance="outline">
       <input
         matInput
         [matDatepicker]="pickerFrom"
         formControlName="startDate"
         placeholder="დაწყების თარიღი"
+        [max]="maxStartDate"
+        (dateChange)="onStartDateChange($event.value)"
       />
-      <!-- [max]="maxFromDate()"
-          (dateInput)="handleDateChange($event, true)" -->
       <mat-datepicker-toggle
         matIconSuffix
         [for]="pickerFrom"
@@ -57,18 +54,15 @@
       <mat-datepicker #pickerFrom></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field
-      appearance="outline"
-      id="campaigns-dashboard-page--sendDateFrom-form-field"
-    >
+    <mat-form-field appearance="outline">
       <input
         matInput
         [matDatepicker]="pickerTo"
         formControlName="endDate"
         placeholder="დასრულების თარიღი"
+        [min]="minEndDate"
+        (dateChange)="onEndDateChange($event.value)"
       />
-      <!-- [max]="maxFromDate()"
-          (dateInput)="handleDateChange($event, true)" -->
       <mat-datepicker-toggle
         matIconSuffix
         [for]="pickerTo"

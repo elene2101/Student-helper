@@ -1,42 +1,138 @@
-<h2>📚 Assignments</h2>
+<div class="flex gap-8 p-6 h-full">
+  <div class="w-1/2 flex flex-col h-full">
+    <mat-tab-group class="flex-1 overflow-hidden">
+      <mat-tab label="მიმდინარე" class="py-4">
+        <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
+          @for (assignment of pendingAssignments$ | async; track assignment.id)
+          {
+          <li
+            class="p-5 rounded-xl flex justify-between shadow-xl h-[220px]"
+            [ngClass]="{
+              'bg-blue-50': selectedAssignment?.id === assignment.id,
+              'bg-white': selectedAssignment?.id !== assignment.id
+            }"
+          >
+            <div class="flex flex-col gap-2 w-3/4 overflow-hidden">
+              <h1 class="font-semibold text-lg">
+                {{ getSubjectName(assignment.subjectId, subjects$ | async) }}
+              </h1>
+              <p class="text-gray-600 border-b pb-2 border-gray-200">
+                ⏰ {{ assignment.deadline | date : "shortDate" }} -
+                {{ assignment.deadlineTime | date : "shortTime" }}
+              </p>
+              <p
+                class="text-gray-600 text-sm line-clamp-3 p-1 px-3 pb-1 rounded-xl"
+                [innerHTML]="assignment.description"
+              ></p>
+              @if(assignment.type){
+              <p class="text-gray-800 font-bold mt-2">
+                {{ assignment.type }}
+              </p>
+              }
+            </div>
 
-<!-- Add New -->
-<form (ngSubmit)="addAssignment()">
-  <input
-    [(ngModel)]="newAssignment.subject"
-    name="subject"
-    placeholder="Subject"
-    required
-  />
-  <input
-    [(ngModel)]="newAssignment.description"
-    name="description"
-    placeholder="Description"
-  />
-  <input
-    [(ngModel)]="newAssignment.deadline"
-    name="deadline"
-    type="date"
-    required
-  />
-  <button type="submit">➕ Add</button>
-</form>
+            <div class="flex flex-col justify-between h-full items-end">
+              <div class="flex gap-2">
+                <button
+                  class="edit-btn"
+                  (click)="openaddAssignmentComponent(assignment)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  (click)="deleteAssignment(assignment)"
+                  class="delete-btn"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
 
-<hr />
+              <div class="w-full flex flex-row items-center">
+                <p class="self-center mr-[-4px]">შესრულებული</p>
+                <mat-checkbox
+                  (change)="markCompleted(assignment)"
+                ></mat-checkbox>
+              </div>
+            </div>
+          </li>
+          }
+        </ul>
+      </mat-tab>
 
-<!-- List Assignments -->
-<!-- <ul>
-  @for(a of assignments$ | async; track a){
-  <li>
-    <input
-      type="checkbox"
-      [checked]="a.completed"
-      (change)="toggleComplete(a)"
-    />
-    <strong [class.done]="a.completed">{{ a.subject }}</strong> -
-    {{ a.description }}
-    <small>(due: {{ a.deadline }})</small>
-    <button (click)="deleteAssignment(a.id!)">❌</button>
-  </li>
-  } -->
-<!-- </ul> -->
+      <mat-tab label="დასრულებული">
+        <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
+          @for(assignment of completedAssignments$ | async; track assignment.id)
+          {
+          <li
+            class="p-5 rounded-xl flex justify-between shadow-xl h-[220px]"
+            [ngClass]="{
+              'bg-blue-50': selectedAssignment?.id === assignment.id,
+              'bg-white': selectedAssignment?.id !== assignment.id
+            }"
+          >
+            <div class="flex flex-col gap-2 w-3/4 overflow-hidden">
+              <h1 class="font-semibold text-lg">
+                {{ getSubjectName(assignment.subjectId, subjects$ | async) }}
+              </h1>
+              <p class="text-gray-600 border-b pb-2 border-gray-200">
+                ⏰ {{ assignment.deadline | date : "shortDate" }} -
+                {{ assignment.deadlineTime | date : "shortTime" }}
+              </p>
+              <p
+                class="text-gray-600 text-sm line-clamp-3 p-1 px-3 pb-1 rounded-xl"
+                [innerHTML]="assignment.description"
+              ></p>
+              @if(assignment.type){
+              <p class="text-gray-800 font-bold mt-2">
+                {{ assignment.type }}
+              </p>
+              }
+            </div>
+
+            <div class="flex flex-col justify-between h-full items-end">
+              <div class="flex gap-2">
+                <button
+                  class="edit-btn"
+                  (click)="openaddAssignmentComponent(assignment)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  (click)="deleteAssignment(assignment)"
+                  class="delete-btn"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+
+              <div class="w-full flex flex-row items-center">
+                <p class="self-center mr-[-4px]">შესრულებული</p>
+                <mat-checkbox
+                  checked
+                  (change)="markPending(assignment)"
+                ></mat-checkbox>
+              </div>
+            </div>
+          </li>
+          }
+        </ul>
+      </mat-tab>
+    </mat-tab-group>
+
+    <button
+      (click)="openaddAssignmentComponent(null)"
+      class="w-58 primary-btn mt-8"
+      [disabled]="showAddAssignment && !selectedAssignment"
+    >
+      + დავალების დამატება
+    </button>
+  </div>
+  <div class="w-1/2">
+    @if(showAddAssignment){
+    <app-add-assignment
+      [assignmentData]="selectedAssignment"
+      (closeAddAssignmentEvent)="closeAssignmentAdd()"
+    ></app-add-assignment>
+    }
+  </div>
+</div>

@@ -1,5 +1,6 @@
 @import "./form-elements.scss";
 @import "./mixins.scss";
+@import "./toast.scss";
 
 @include custom-checkbox;
 
@@ -38,42 +39,20 @@ input.mat-mdc-input-element:-webkit-autofill:active {
   }
 }
 
-.registration-form {
-  width: 100%;
-  max-width: 400px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-
-  .form-title {
-    text-align: center;
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #333;
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
   }
 
-  .full-width {
-    width: 100%;
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color, transparent);
+    border-radius: 3px;
+    margin-top: var(--scrollbar-margin-top, 0px) !important;
+    margin-bottom: var(--scrollbar-margin-bottom, 0px) !important;
   }
 
-  button {
-    padding: 0.75rem;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .error-text {
-    color: #e53935;
-    font-weight: 500;
-    margin-left: -10px;
-  }
-  a {
-    text-decoration: none;
+  &::-webkit-scrollbar-thumb {
+    background: var(--primary-light-color);
+    border-radius: 3px;
   }
 }

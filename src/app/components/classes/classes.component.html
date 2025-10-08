@@ -26,7 +26,7 @@
                 {{ class.mode === "online" ? "💻 ონლაინ" : "🏫 კამპუსი" }}
               </p>
             </div>
-            <div class="flex gap-2">
+            <div class="flex gap-2 self-start">
               <button class="edit-btn" (click)="openScheduleComponent(class)">
                 <mat-icon>edit</mat-icon>
               </button>
@@ -79,5 +79,5 @@
     </button>
   </div>
 
-  <app-subjects class="w-1/2 px-6 h-full"></app-subjects>
+  <app-subjects class="w-1/2 px-6 mt-2"></app-subjects>
 </div>

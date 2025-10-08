@@ -1,44 +1,99 @@
-import { Component, inject, NgModule, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Assignment, AssignmentService } from './assignment.service';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { Assignment } from './assignments.model';
+import { AddAssignmentComponent } from './add-assignment/add-assignment.component';
+import { Observable, map } from 'rxjs';
+import { AssignmentsService } from './assignment.service';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { Subject } from '../classes/classes.model';
+import { SubjectsService } from '../classes/subjects/subject.service';
 
 @Component({
   selector: 'app-assignments',
   templateUrl: './assignments.component.html',
   styleUrls: ['./assignments.component.scss'],
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatTabsModule,
+    MatCheckbox,
+    AddAssignmentComponent,
+  ],
+  standalone: true,
 })
-export class AssignmentsComponent implements OnInit {
-  assignmentService = inject(AssignmentService);
-  assignments$!: Observable<Assignment[]> | any;
-  newAssignment: Partial<Assignment> = {
-    subject: '',
-    description: '',
-    deadline: '',
-  };
+export class AssignmentsComponent {
+  private assignmentsService = inject(AssignmentsService);
+  private subjectsService = inject(SubjectsService);
 
-  ngOnInit() {
-    this.assignments$ = this.assignmentService.getAssignments(
-      'DyELadOE0MYsabHOFgBcBLchN2a2'
+  public subjects$ = this.subjectsService.getSubjects$();
+  public assignments$ = this.assignmentsService.getAssignments$();
+
+  public showAddAssignment: boolean = false;
+  public selectedAssignment: null | Assignment = null;
+
+  get pendingAssignments$(): Observable<Assignment[]> {
+    return this.assignments$.pipe(
+      map((a) =>
+        a
+          .filter((x) => !x.completed)
+          .sort(
+            (a, b) =>
+              new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+          )
+      )
     );
   }
 
-  addAssignment() {
-    if (this.newAssignment.subject && this.newAssignment.deadline) {
-      this.assignmentService.addAssignment(this.newAssignment as Assignment);
-      this.newAssignment = { subject: '', description: '', deadline: '' };
-    }
+  get completedAssignments$(): Observable<Assignment[]> {
+    return this.assignments$.pipe(
+      map((a) =>
+        a
+          .filter((x) => x.completed)
+          .sort(
+            (a, b) =>
+              new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+          )
+      )
+    );
   }
 
-  toggleComplete(assignment: Assignment) {
-    this.assignmentService.updateAssignment(assignment.id!, {
-      completed: !assignment.completed,
+  public getSubjectName(
+    subjectId: string,
+    subjects: Subject[] | null | undefined
+  ): string {
+    if (!subjects) return 'უცნობი საგანი';
+    const subject = subjects.find((s) => s.id === subjectId);
+    return subject ? subject.name : 'უცნობი საგანი';
+  }
+
+  public markCompleted(assignment: Assignment) {
+    this.assignmentsService.updateAssignment(assignment.id!, {
+      completed: true,
     });
   }
 
-  deleteAssignment(id: string) {
-    this.assignmentService.deleteAssignment(id);
+  public markPending(assignment: Assignment) {
+    this.assignmentsService.updateAssignment(assignment.id!, {
+      completed: false,
+    });
+  }
+
+  public deleteAssignment(assignment: Assignment) {
+    this.assignmentsService.deleteAssignment(assignment.id!);
+  }
+
+  openaddAssignmentComponent(assignment: Assignment | null) {
+    this.selectedAssignment = assignment;
+    this.showAddAssignment = true;
+  }
+
+  closeAssignmentAdd() {
+    this.selectedAssignment = null;
+    this.showAddAssignment = false;
   }
 }

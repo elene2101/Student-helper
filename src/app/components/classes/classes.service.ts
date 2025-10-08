@@ -11,7 +11,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { Auth, authState, User } from '@angular/fire/auth';
-import { ClassSchedule } from './class-schedule.model';
+import { ClassSchedule } from './classes.model';
 import { filter, map, Observable, switchMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -53,11 +53,33 @@ export class ClassScheduleService {
 
   public updateSchedule(id: string, data: Partial<ClassSchedule>) {
     const docRef = doc(this.firestore, `schedules/${id}`);
-    return updateDoc(docRef, data as any);
+    return updateDoc(docRef, data);
   }
 
   public deleteSchedule(id: string) {
     const docRef = doc(this.firestore, `schedules/${id}`);
     return deleteDoc(docRef);
+  }
+
+  checkDuplicateActiveSchedule(subjectId: string): Observable<boolean> {
+    const userId = this.auth.currentUser?.uid;
+    if (!userId) throw new Error('User not logged in');
+    const q = query(
+      this.schedulesCol,
+      where('userId', '==', userId),
+      where('subjectId', '==', subjectId)
+    );
+
+    return collectionData(q, { idField: 'id' }).pipe(
+      map((schedules: any[]) => {
+        const now = new Date();
+        return schedules.some((s) => {
+          const endDate = s.endDate?.toDate
+            ? s.endDate.toDate()
+            : new Date(s.endDate);
+          return endDate >= now;
+        });
+      })
+    );
   }
 }

@@ -1,4 +1,6 @@
-<div class="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
+<div
+  class="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg flex flex-col h-[630px]"
+>
   <h2 class="text-2xl font-bold mb-4 text-gray-800">საგნების მართვა</h2>
 
   @if(!showAddInput){
@@ -36,7 +38,7 @@
   </form>
   }
 
-  <ul class="space-y-4">
+  <ul class="space-y-4 overflow-y-auto flex-1">
     @for( subject of subjects$ | async; track subject.id){
 
     <li class="flex justify-between items-center p-3 rounded shadow">

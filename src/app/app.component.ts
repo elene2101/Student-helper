@@ -23,6 +23,5 @@ export class AppComponent {
         const currentRoute = this.router.routerState.root.snapshot.firstChild;
         this.showHeaderAndMenu = !currentRoute?.data['hideHeader'];
       });
-    console.log(this.showHeaderAndMenu);
   }
 }

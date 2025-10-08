@@ -1,3 +1,5 @@
+@use "@angular/material" as mat;
+@use "ngx-toastr/toastr";
 @import "tailwindcss";
 @import "./styles/variables.scss";
 @import "./styles/mixins.scss";
