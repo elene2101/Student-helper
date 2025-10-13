@@ -1,7 +1,7 @@
 export interface MenuItem {
   text: string;
   isExpanded: boolean;
-  route: string;
+  route?: string;
   children: {
     text: string;
     route: string;
@@ -20,10 +20,9 @@ export const MenuItems: MenuItem[] = [
   {
     text: 'აქტივოვები',
     isExpanded: false,
-    route: 'activites',
     children: [
       { text: 'კლასები', route: 'classes' },
-      { text: 'გამოცდები', route: 'bla' },
+      { text: 'გამოცდები', route: 'exams' },
       { text: 'დავალებები', route: 'assignments' },
     ],
   },

@@ -39,6 +39,14 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
+      <mat-select formControlName="mode" placeholder="მდებარეობა">
+        @for(location of ['ონლაინ','კამპუსში']; track location){
+        <mat-option [value]="location">{{ location }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
       <input
         matInput
         [matDatepicker]="pickerFrom"
@@ -100,14 +108,6 @@
         <mat-option value="monthly"> ყოველთვე </mat-option>
       </mat-select>
     </mat-form-field>
-
-    <div>
-      <label class="form-label">ადგილი</label>
-      <mat-radio-group formControlName="mode" class="flex flex-col gap-2">
-        <mat-radio-button value="online">💻 ონლაინ</mat-radio-button>
-        <mat-radio-button value="campus">🏫 კამპუსში</mat-radio-button>
-      </mat-radio-group>
-    </div>
 
     @if (scheduleForm.get('recurrence')?.value === 'weekly') {
     <div>

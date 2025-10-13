@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  input,
-  Input,
-  output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, inject, input, output, SimpleChanges } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -53,7 +46,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./add-assignment.component.scss'],
 })
 export class AddAssignmentComponent {
-  assignmentData = input<Assignment | null>(null);
+  public assignmentData = input<Assignment | null>(null);
   public closeAddAssignmentEvent = output();
 
   private fb = inject(FormBuilder);

@@ -1,0 +1,124 @@
+<div class="flex gap-8 p-6 h-full">
+  <div class="w-1/2 flex flex-col h-full">
+    <mat-tab-group class="flex-1 overflow-hidden">
+      <mat-tab label="მიმდინარე">
+        <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
+          @for (exam of upcomingExams$ | async; track exam.id) {
+          <li
+            class="p-5 rounded-xl flex justify-between shadow-xl h-[230px]"
+            [ngClass]="{
+              'bg-blue-50': selectedExam?.id === exam.id,
+              'bg-white': selectedExam?.id !== exam.id
+            }"
+          >
+            <div class="flex flex-col gap-2 w-3/4 overflow-hidden">
+              <h1 class="font-semibold text-lg">
+                {{ getSubjectName(exam.subjectId, subjects$ | async) }}
+              </h1>
+              <p class="text-gray-600 border-b pb-2 border-gray-200">
+                📅 {{ exam.date | date : "shortDate" }} -
+                {{ exam.time | date : "shortTime" }}
+              </p>
+
+              @if(exam.description){
+              <p
+                class="text-gray-600 text-sm line-clamp-2 p-1 px-3 pb-1 rounded-xl"
+                [innerHTML]="exam.description"
+              ></p>
+              }
+              <p class="text-gray-800 mt-2">
+                {{ exam.location === locationType.Online ? "💻" : "🏫" }}
+                {{ exam.location }}
+              </p>
+              @if(exam.type){
+              <p class="text-gray-800 font-bold mt-[-4px]">
+                {{ exam.type }}
+              </p>
+              }
+            </div>
+
+            <div class="flex flex-col justify-between h-full items-end">
+              <div class="flex gap-2">
+                <button class="edit-btn" (click)="openAddExamComponent(exam)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button class="delete-btn" (click)="deleteExam(exam)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </li>
+          }
+        </ul>
+      </mat-tab>
+
+      <mat-tab label="ჩაბარებული">
+        <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
+          @for (exam of completedExams$ | async; track exam.id) {
+          <li
+            class="p-5 rounded-xl flex justify-between shadow-xl h-[230px]"
+            [ngClass]="{
+              'bg-blue-50': selectedExam?.id === exam.id,
+              'bg-white': selectedExam?.id !== exam.id
+            }"
+          >
+            <div class="flex flex-col gap-2 w-3/4 overflow-hidden">
+              <h1 class="font-semibold text-lg">
+                {{ getSubjectName(exam.subjectId, subjects$ | async) }}
+              </h1>
+              <p class="text-gray-600 border-b pb-2 border-gray-200">
+                📅 {{ exam.date | date : "shortDate" }} -
+                {{ exam.time | date : "shortTime" }}
+              </p>
+
+              @if(exam.description){
+              <p
+                class="text-gray-600 text-sm line-clamp-2 p-1 px-3 pb-1 rounded-xl"
+                [innerHTML]="exam.description"
+              ></p>
+              }
+              <p class="text-gray-800 mt-2">
+                {{ exam.location === locationType.Online ? "💻" : "🏫" }}
+                {{ exam.location }}
+              </p>
+              @if(exam.type){
+              <p class="text-gray-800 font-bold mt-[-4px]">
+                {{ exam.type }}
+              </p>
+              }
+            </div>
+
+            <div class="flex flex-col justify-between h-full items-end">
+              <div class="flex gap-2">
+                <button class="edit-btn" (click)="openAddExamComponent(exam)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button class="delete-btn" (click)="deleteExam(exam)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </li>
+          }
+        </ul>
+      </mat-tab>
+    </mat-tab-group>
+
+    <button
+      (click)="openAddExamComponent(null)"
+      class="w-58 primary-btn mt-2"
+      [disabled]="showAddExam && !selectedExam"
+    >
+      + გამოცდის დამატება
+    </button>
+  </div>
+
+  <div class="w-1/2">
+    @if(showAddExam){
+    <app-add-exam
+      [examData]="selectedExam"
+      (closeAddExamEvent)="closeExamAdd()"
+    ></app-add-exam>
+    }
+  </div>
+</div>

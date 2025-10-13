@@ -53,6 +53,8 @@ export class SideMenuComponent {
   }
 
   shouldShowActive(item: MenuItem): boolean {
-    return this.isRouteActive(item.route) || this.isAnyChildActive(item);
+    if (item.route)
+      return this.isRouteActive(item.route) || this.isAnyChildActive(item);
+    return false;
   }
 }

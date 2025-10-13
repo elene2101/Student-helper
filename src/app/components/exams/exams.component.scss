@@ -1,0 +1,28 @@
+.activeTab {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+.activeTabLine {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--primary-color);
+}
+
+h1 {
+  color: var(--primary-color);
+}
+
+::ng-deep .mdc-tab-indicator__content {
+  border-color: var(--primary-color) !important;
+}
+::ng-deep .mdc-tab__text-label {
+  font-weight: 500 !important;
+  font-size: 16px;
+}
+
+::ng-deep .mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: var(--primary-color) !important;
+}

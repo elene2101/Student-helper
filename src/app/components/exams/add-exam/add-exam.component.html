@@ -1,0 +1,125 @@
+<h2 class="text-2xl font-bold m-2">
+  {{ examData()?.id ? "გამოცდის რედაქტირება" : "გამოცდის დამატება" }}
+</h2>
+
+@if (isLoading) {
+<div class="absolute inset-0 flex items-center justify-center z-50 bg-white/50">
+  <mat-progress-spinner
+    mode="indeterminate"
+    diameter="60"
+    color="primary"
+  ></mat-progress-spinner>
+</div>
+}
+
+<form
+  [formGroup]="examForm"
+  (ngSubmit)="saveExam()"
+  class="mt-4 flex justify-between flex-col relative p-4"
+>
+  <div class="flex flex-col gap-4">
+    <mat-form-field appearance="outline">
+      <input matInput formControlName="name" placeholder="გამოცდის სახელი" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-select formControlName="subjectId" placeholder="საგანი">
+        <mat-form-field appearance="outline" class="w-full mb-4">
+          <input
+            matInput
+            [formControl]="subjectFilterCtrl"
+            placeholder="ძიება საგნებში"
+          />
+        </mat-form-field>
+        @for(subject of filteredSubjects$ | async; track subject.id){
+        <mat-option [value]="subject.id">{{ subject.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-select formControlName="type" placeholder="ტიპი">
+        @for(type of examTypes; track type){
+        <mat-option [value]="type">{{ type }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-select formControlName="location" placeholder="მდებარეობა">
+        @for(location of locations; track location){
+        <mat-option [value]="location">{{ location }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if(examForm.get('location')?.value === 'კამპუსში'){
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        formControlName="room"
+        placeholder="ოთახის ნომერი"
+        type="text"
+      />
+    </mat-form-field>
+    }
+
+    <div class="w-full flex gap-6">
+      <mat-form-field appearance="outline" class="w-1/2">
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="date"
+          placeholder="თარიღი"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-1/2">
+        <input
+          matInput
+          [matTimepicker]="timePicker"
+          formControlName="time"
+          placeholder="დრო"
+        />
+        <mat-timepicker-toggle matIconSuffix [for]="timePicker" />
+        <mat-timepicker #timePicker />
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        formControlName="duration"
+        placeholder="ხანგრძლივობა (წუთებში)"
+        type="number"
+        min="1"
+      />
+    </mat-form-field>
+
+    <quill-editor
+      [modules]="quillModules"
+      formControlName="description"
+      placeholder="დამატებითი აღწერა (არასავალდებულო)"
+      class="h-24"
+    >
+    </quill-editor>
+  </div>
+
+  <div class="w-full p-2 flex justify-between mt-16">
+    <button type="button" class="secondary-btn" (click)="closeExamAdd()">
+      გაუქმება
+    </button>
+    <button
+      type="submit"
+      class="primary-btn"
+      [disabled]="examForm.invalid || isLoading"
+    >
+      {{ examData()?.id ? "შენახვა" : "დამატება" }}
+    </button>
+  </div>
+</form>
