@@ -13,7 +13,7 @@
           >
             <div class="flex flex-col gap-2 w-3/4 overflow-hidden">
               <h1 class="font-semibold text-lg">
-                {{ getSubjectName(exam.subjectId, subjects$ | async) }}
+                {{ exam.subject.name }}
               </h1>
               <p class="text-gray-600 border-b pb-2 border-gray-200">
                 📅 {{ exam.date | date : "shortDate" }} -
@@ -64,7 +64,7 @@
           >
             <div class="flex flex-col gap-2 w-3/4 overflow-hidden">
               <h1 class="font-semibold text-lg">
-                {{ getSubjectName(exam.subjectId, subjects$ | async) }}
+                {{ exam.subject.name }}
               </h1>
               <p class="text-gray-600 border-b pb-2 border-gray-200">
                 📅 {{ exam.date | date : "shortDate" }} -

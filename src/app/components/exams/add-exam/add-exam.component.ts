@@ -63,7 +63,7 @@ export class AddExamComponent {
 
   public examForm = this.fb.group({
     name: ['', Validators.required],
-    subjectId: ['', Validators.required],
+    subject: ['', Validators.required],
     type: ['', Validators.required],
     location: ['', Validators.required],
     room: [''],
@@ -140,5 +140,12 @@ export class AddExamComponent {
 
   public closeExamAdd() {
     this.closeAddExamEvent.emit();
+  }
+
+  public compareById(
+    o1: { id: number; name: string },
+    o2: { id: number; name: string }
+  ): boolean {
+    return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 }

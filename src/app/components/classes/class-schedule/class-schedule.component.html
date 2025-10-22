@@ -22,7 +22,11 @@
 <form [formGroup]="scheduleForm" class="flex justify-between flex-col p-4">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
     <mat-form-field appearance="outline">
-      <mat-select formControlName="subjectId" placeholder="საგანი">
+      <mat-select
+        formControlName="subject"
+        [compareWith]="compareById"
+        placeholder="საგანი"
+      >
         <mat-form-field appearance="outline" class="w-full mb-4">
           <input
             matInput
@@ -31,7 +35,7 @@
           />
         </mat-form-field>
         @for(subject of filteredSubjects$ | async; track subject.id){
-        <mat-option [value]="subject.id">
+        <mat-option [value]="{ name: subject.name, id: subject.id }">
           {{ subject.name }}
         </mat-option>
         }
@@ -89,17 +93,23 @@
       <mat-timepicker #startTimePicker />
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <input
-        matInput
-        [matTimepicker]="endTimePicker"
-        formControlName="endTime"
-        placeholder="დასრულების დრო"
-      />
-      <mat-timepicker-toggle matIconSuffix [for]="endTimePicker" />
-      <mat-timepicker #endTimePicker />
-    </mat-form-field>
-
+    <div class="flex flex-col gap-4">
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          [matTimepicker]="endTimePicker"
+          formControlName="endTime"
+          placeholder="დასრულების დრო"
+        />
+        <mat-timepicker-toggle matIconSuffix [for]="endTimePicker" />
+        <mat-timepicker #endTimePicker />
+      </mat-form-field>
+      @if(scheduleForm.hasError('startAfterEnd')){
+      <mat-error class="text-xs">
+        დასრულების დრო ნაკლები უნდა იყოს დაწყების დროზე
+      </mat-error>
+      }
+    </div>
     <mat-form-field appearance="outline">
       <mat-select formControlName="recurrence" placeholder="გამეორება">
         <mat-option value="none"> ერთჯერადი </mat-option>

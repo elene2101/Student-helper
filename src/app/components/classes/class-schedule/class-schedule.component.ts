@@ -23,6 +23,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-class-schedule',
@@ -39,6 +40,7 @@ import { ToastrService } from 'ngx-toastr';
     MatRadioModule,
     FormsModule,
     MatProgressSpinnerModule,
+    MatFormFieldModule,
   ],
   templateUrl: './class-schedule.component.html',
 })
@@ -58,16 +60,19 @@ export class ClassScheduleComponent {
   public minEndDate: Date | null = null;
   public maxStartDate: Date | null = null;
 
-  public scheduleForm: FormGroup = this.fb.group({
-    subjectId: [null, Validators.required],
-    startDate: [null, Validators.required],
-    endDate: [null, Validators.required],
-    startTime: [null, Validators.required],
-    endTime: [null, Validators.required],
-    recurrence: ['none', Validators.required],
-    mode: ['online', Validators.required],
-    weekDays: this.fb.array([]),
-  });
+  public scheduleForm: FormGroup = this.fb.group(
+    {
+      subject: [null, Validators.required],
+      startDate: [null, Validators.required],
+      endDate: [null, Validators.required],
+      startTime: [null, Validators.required],
+      endTime: [null, Validators.required],
+      recurrence: ['none', Validators.required],
+      mode: ['online', Validators.required],
+      weekDays: this.fb.array([]),
+    },
+    { validators: this.startBeforeEndValidator }
+  );
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ClassSchedule | null) {
     if (data) {
@@ -118,7 +123,11 @@ export class ClassScheduleComponent {
     const formValue = this.scheduleForm.value;
     this.isLoading = true;
 
-    if (this.data?.id && this.data.subjectId === formValue.subjectId) {
+    if (formValue.recurrence !== 'weekly') {
+      formValue.weekDays = [];
+    }
+
+    if (this.data?.id && this.data.subject.id === formValue.subject.id) {
       this.scheduleService
         .updateSchedule(this.data.id, formValue)
         .then(() => this.dialogRef.close())
@@ -128,7 +137,7 @@ export class ClassScheduleComponent {
     }
 
     this.scheduleService
-      .checkDuplicateActiveSchedule(formValue.subjectId)
+      .checkDuplicateActiveSchedule(formValue.subject)
       .pipe(take(1))
       .subscribe((exists) => {
         if (exists) {
@@ -164,5 +173,24 @@ export class ClassScheduleComponent {
     if (start && start > end) {
       this.scheduleForm.get('startDate')?.setValue(null);
     }
+  }
+
+  public compareById(
+    o1: { id: number; name: string },
+    o2: { id: number; name: string }
+  ): boolean {
+    return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
+  public startBeforeEndValidator(group: FormGroup) {
+    const start = group.get('startTime')?.value;
+    const end = group.get('endTime')?.value;
+
+    if (!start || !end) return null;
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    return startDate >= endDate ? { startAfterEnd: true } : null;
   }
 }

@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Observable, map } from 'rxjs';
-import { Subject } from '../classes/classes.model';
 import { SubjectsService } from '../classes/subjects/subject.service';
 import { ExamsService } from './exams.service';
 import { AddExamComponent } from './add-exam/add-exam.component';
@@ -46,15 +45,6 @@ export class ExamsComponent {
     this.completedExams$ = this.exams$.pipe(
       map((exam) => exam.filter((e) => new Date(e.date) < today))
     );
-  }
-
-  public getSubjectName(
-    subjectId: string,
-    subjects: Subject[] | null | undefined
-  ): string {
-    if (!subjects) return 'უცნობი საგანი';
-    const subject = subjects.find((s) => s.id === subjectId);
-    return subject ? subject.name : 'უცნობი საგანი';
   }
 
   public deleteExam(exam: Exam) {

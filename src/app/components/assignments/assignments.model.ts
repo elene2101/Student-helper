@@ -1,6 +1,6 @@
 export interface Assignment {
   id?: string;
-  subjectId: string;
+  subject: { name: string; id: string };
   description?: string;
   deadline: Date;
   deadlineTime: Date;

@@ -1,7 +1,7 @@
 export interface Exam {
   id?: string;
   name: string;
-  subjectId: string;
+  subject: { name: string; id: string };
   type: ExamType;
   location: LocationType;
   roomNumber?: string | null;

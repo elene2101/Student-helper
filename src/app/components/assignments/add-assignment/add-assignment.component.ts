@@ -62,7 +62,7 @@ export class AddAssignmentComponent {
 
   public subjectFilterCtrl = new FormControl('');
   public assignmentForm = this.fb.group({
-    subjectId: ['', Validators.required],
+    subject: [null, Validators.required],
     description: ['', Validators.required],
     deadline: [null as null | Date, Validators.required],
     deadlineTime: [null as null | Date, Validators.required],
@@ -73,7 +73,7 @@ export class AddAssignmentComponent {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['assignmentData'] && this.assignmentData()) {
-      this.assignmentForm.patchValue(this.assignmentData() as Assignment);
+      this.assignmentForm.patchValue(this.assignmentData() as any);
     } else {
       this.assignmentForm.reset();
     }
@@ -130,5 +130,12 @@ export class AddAssignmentComponent {
 
   public closeAddAssignment() {
     this.closeAddAssignmentEvent.emit();
+  }
+
+  public compareById(
+    o1: { id: number; name: string },
+    o2: { id: number; name: string }
+  ): boolean {
+    return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 }

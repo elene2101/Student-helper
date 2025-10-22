@@ -23,7 +23,11 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-select formControlName="subjectId" placeholder="საგანი">
+      <mat-select
+        formControlName="subject"
+        placeholder="საგანი"
+        [compareWith]="compareById"
+      >
         <mat-form-field appearance="outline" class="w-full mb-4">
           <input
             matInput
@@ -32,7 +36,9 @@
           />
         </mat-form-field>
         @for(subject of filteredSubjects$ | async; track subject.id){
-        <mat-option [value]="subject.id">{{ subject.name }}</mat-option>
+        <mat-option [value]="{ name: subject.name, id: subject.id }">{{
+          subject.name
+        }}</mat-option>
         }
       </mat-select>
     </mat-form-field>

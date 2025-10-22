@@ -18,7 +18,7 @@ export const MenuItems: MenuItem[] = [
   },
   { text: 'კალენდარი', isExpanded: false, route: 'calendar', children: [] },
   {
-    text: 'აქტივოვები',
+    text: 'აქტივობები',
     isExpanded: false,
     children: [
       { text: 'კლასები', route: 'classes' },

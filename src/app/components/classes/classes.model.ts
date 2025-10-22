@@ -1,7 +1,10 @@
 export interface ClassSchedule {
   id?: string;
   userId: string;
-  subjectId: string;
+  subject: {
+    name: string;
+    id: string;
+  };
   startDate: Date;
   endDate: Date;
   startTime: Date;

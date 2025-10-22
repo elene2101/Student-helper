@@ -8,7 +8,6 @@ import { AddAssignmentComponent } from './add-assignment/add-assignment.componen
 import { Observable, map } from 'rxjs';
 import { AssignmentsService } from './assignment.service';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { Subject } from '../classes/classes.model';
 import { SubjectsService } from '../classes/subjects/subject.service';
 
 @Component({
@@ -60,15 +59,6 @@ export class AssignmentsComponent {
           )
       )
     );
-  }
-
-  public getSubjectName(
-    subjectId: string,
-    subjects: Subject[] | null | undefined
-  ): string {
-    if (!subjects) return 'უცნობი საგანი';
-    const subject = subjects.find((s) => s.id === subjectId);
-    return subject ? subject.name : 'უცნობი საგანი';
   }
 
   public markCompleted(assignment: Assignment) {
