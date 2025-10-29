@@ -1,9 +1,8 @@
-import { Component, inject } from '@angular/core';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { Component, inject, HostListener } from '@angular/core';
+import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MenuItem, MenuItems } from './side-menu.model';
-import { MatMenuModule } from '@angular/material/menu';
 import {
   NavigationEnd,
   Router,
@@ -11,18 +10,16 @@ import {
   RouterModule,
 } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-side-menu',
+  standalone: true,
   imports: [
     MatSidenavModule,
     MatIconModule,
     CommonModule,
-    MatMenuModule,
     RouterLink,
-    MatTooltipModule,
     RouterModule,
   ],
   templateUrl: './side-menu.component.html',
@@ -30,8 +27,24 @@ import { toSignal } from '@angular/core/rxjs-interop';
 })
 export class SideMenuComponent {
   private router = inject(Router);
-
   public menuItems = MenuItems;
+
+  public isMobile = false;
+  public opened = true;
+
+  ngOnInit() {
+    this.checkViewport();
+  }
+
+  @HostListener('window:resize')
+  checkViewport() {
+    this.isMobile = window.innerWidth < 1024;
+    this.opened = !this.isMobile;
+  }
+
+  toggleMenu() {
+    this.opened = !this.opened;
+  }
 
   private activeRoute$ = toSignal(
     this.router.events.pipe(
@@ -40,19 +53,19 @@ export class SideMenuComponent {
     )
   );
 
-  isRouteActive(route: string): boolean {
+  public isRouteActive(route: string): boolean {
     return route === this.activeRoute$();
   }
 
-  expandMenuItem(item: MenuItem): void {
+  public expandMenuItem(item: MenuItem): void {
     item.isExpanded = !item.isExpanded;
   }
 
-  isAnyChildActive(item: MenuItem): boolean {
+  public isAnyChildActive(item: MenuItem): boolean {
     return item.children.some((child) => this.isRouteActive(child.route));
   }
 
-  shouldShowActive(item: MenuItem): boolean {
+  public shouldShowActive(item: MenuItem): boolean {
     if (item.route)
       return this.isRouteActive(item.route) || this.isAnyChildActive(item);
     return false;

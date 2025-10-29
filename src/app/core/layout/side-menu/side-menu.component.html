@@ -1,5 +1,10 @@
-<mat-sidenav-container class="flex">
-  <mat-sidenav #sidenav class="font-bold text-xl" mode="side" [opened]="true">
+<mat-sidenav-container class="h-screen">
+  <mat-sidenav
+    #sidenav
+    [mode]="isMobile ? 'over' : 'side'"
+    [opened]="!isMobile || opened"
+    (backdropClick)="toggleMenu()"
+  >
     <div class="menu-container pb-16 mt-8">
       @for (item of menuItems; track item) {
       <div
@@ -9,17 +14,16 @@
         (click)="expandMenuItem(item)"
       >
         <div>
-          <span class="ml-3">
-            {{ item.text }}
-          </span>
+          <span class="ml-3">{{ item.text }}</span>
         </div>
-        @if(item.children.length > 0){
+        @if (item.children.length > 0) {
         <mat-icon class="mr-4 rotate-icon" [class.expanded]="item.isExpanded">
-          arrow_drop_down </mat-icon
-        >}
+          arrow_drop_down
+        </mat-icon>
+        }
       </div>
 
-      @if (item.isExpanded ) { @for (child of item.children; track child) {
+      @if (item.isExpanded) { @for (child of item.children; track child) {
       <div class="flex relative ml-6">
         <div class="relative w-4 line-dot-container">
           <div
@@ -33,7 +37,6 @@
             class="submenu-item cursor-pointer mt-2 px-4 py-2"
             [class.active]="isRouteActive(child.route)"
             [routerLink]="child.route"
-            routerLinkActive="active"
           >
             <span>{{ child.text }}</span>
           </div>
@@ -42,4 +45,17 @@
       } } }
     </div>
   </mat-sidenav>
+
+  <mat-sidenav-content class="bg-white">
+    <div
+      class="flex items-center justify-between p-4 border-b bg-white shadow-sm lg:hidden"
+    >
+      <h2 class="text-lg font-semibold text-[#4E4E83]">Student Helper</h2>
+      <button mat-icon-button (click)="toggleMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
 </mat-sidenav-container>

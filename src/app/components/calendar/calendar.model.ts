@@ -13,6 +13,7 @@ export interface CalendarEvent {
   recurrence?: string;
   weekDays?: string[];
   mode?: string;
+  description?: string;
 
   rrule?: {
     freq: 'weekly';
@@ -21,4 +22,16 @@ export interface CalendarEvent {
     dtstart: string;
     until?: string;
   };
+}
+
+export interface CalendarEventDialogData {
+  id: string;
+  title: string;
+  type: EventType;
+  start: Date;
+  end?: Date;
+  location?: string;
+  room?: string;
+  mode?: string;
+  description?: string;
 }

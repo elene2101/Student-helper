@@ -109,3 +109,12 @@ mat-sidenav {
   overflow-x: hidden;
   transition: width 0.3s ease-in-out;
 }
+mat-sidenav-container {
+  height: calc(100vh - 6rem);
+  overflow: hidden;
+}
+
+mat-sidenav-content {
+  overflow-y: auto;
+  height: 100%;
+}

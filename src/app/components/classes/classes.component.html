@@ -1,12 +1,13 @@
-<div class="flex gap-8 p-6 h-full">
-  <div class="w-1/2 flex flex-col h-full">
+<div class="flex flex-col lg:flex-row gap-8 p-4 md:p-6 overflow-hidden">
+  <div class="w-full lg:w-1/2 flex flex-col h-full shadow-md rounded-xl">
     <mat-tab-group class="flex-1 overflow-hidden">
       <mat-tab label="მიმდინარე" class="py-4">
         <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
-          @for(class of upcomingSchedules$ | async; track class.id) {
-
-          <li class="p-5 rounded-xl bg-white flex justify-between shadow-xl">
-            <div class="flex flex-col gap-1">
+          @for (class of upcomingSchedules$ | async; track class.id) {
+          <li
+            class="p-5 rounded-xl bg-white flex flex-col sm:flex-row justify-between shadow-xl gap-3"
+          >
+            <div class="flex flex-col gap-1 w-full sm:w-3/4">
               <h1 class="font-semibold text-lg">
                 {{ class.subject.name }}
               </h1>
@@ -14,19 +15,21 @@
                 {{ class.startDate | date : "shortDate" }} -
                 {{ class.endDate | date : "shortDate" }}
               </p>
-              <p class="text-gray-600">
+              <p class="text-gray-600 text-sm sm:text-base">
                 ⏰ {{ class.startTime | date : "shortTime" }} -
                 {{ class.endTime | date : "shortTime" }}
               </p>
-              <p class="text-gray-600">
+              <p class="text-gray-600 text-sm sm:text-base">
                 🔁 {{ getRecurrenceLabel(class.recurrence, class.weekDays) }}
               </p>
-
-              <p class="text-gray-600">
+              <p class="text-gray-600 text-sm sm:text-base">
                 {{ class.mode === "online" ? "💻 ონლაინ" : "🏫 კამპუსი" }}
               </p>
             </div>
-            <div class="flex gap-2 self-start">
+
+            <div
+              class="flex sm:flex-col justify-end sm:justify-start items-end sm:items-end gap-2"
+            >
               <button class="edit-btn" (click)="openScheduleComponent(class)">
                 <mat-icon>edit</mat-icon>
               </button>
@@ -38,30 +41,35 @@
           }
         </ul>
       </mat-tab>
+
       <mat-tab label="დასრულებული">
         <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
-          @for(class of pastSchedules$ | async; track class.id) {
-          <li class="p-5 rounded-xl bg-white flex justify-between shadow-xl">
-            <div class="flex flex-col gap-1">
+          @for (class of pastSchedules$ | async; track class.id) {
+          <li
+            class="p-5 rounded-xl bg-white flex flex-col sm:flex-row justify-between shadow-xl gap-3"
+          >
+            <div class="flex flex-col gap-1 w-full sm:w-3/4">
               <h1 class="font-semibold text-lg">
                 {{ class.subject.name }}
               </h1>
               <p class="text-gray-400 text-sm">
                 {{ class.startDate | date }} - {{ class.endDate | date }}
               </p>
-              <p class="text-gray-600">
+              <p class="text-gray-600 text-sm sm:text-base">
                 ⏰ {{ class.startTime | date : "shortTime" }} -
                 {{ class.endTime | date : "shortTime" }}
               </p>
-              <p class="text-gray-600">
+              <p class="text-gray-600 text-sm sm:text-base">
                 🔁 {{ getRecurrenceLabel(class.recurrence, class.weekDays) }}
               </p>
-
-              <p class="text-gray-600">
+              <p class="text-gray-600 text-sm sm:text-base">
                 {{ class.mode === "online" ? "💻 ონლაინ" : "🏫 კამპუსი" }}
               </p>
             </div>
-            <div class="flex gap-2">
+
+            <div
+              class="flex sm:flex-col justify-end sm:justify-start items-end sm:items-end gap-2"
+            >
               <button class="edit-btn" (click)="openScheduleComponent(class)">
                 <mat-icon>edit</mat-icon>
               </button>
@@ -74,10 +82,16 @@
         </ul>
       </mat-tab>
     </mat-tab-group>
-    <button (click)="openScheduleComponent()" class="w-58 primary-btn mt-1">
-      + კლასის დამატება
+
+    <button
+      (click)="openScheduleComponent()"
+      class="w-58 primary-btn flex self-center justify-center m-8"
+    >
+      <span class="mr-4">+</span> კლასის დამატება
     </button>
   </div>
 
-  <app-subjects class="w-1/2 px-6 mt-2"></app-subjects>
+  <app-subjects
+    class="w-full lg:w-1/2 px-0 lg:px-6 mt-4 lg:mt-2"
+  ></app-subjects>
 </div>

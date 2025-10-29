@@ -1,37 +1,43 @@
-<div class="flex gap-8 p-6 h-full">
-  <div class="w-1/2 flex flex-col h-full">
+<div class="flex flex-col lg:flex-row gap-8 p-4 md:p-6 overflow-hidden">
+  <div class="w-full lg:w-1/2 flex flex-col h-full shadow-md rounded-xl">
     <mat-tab-group class="flex-1 overflow-hidden">
       <mat-tab label="მიმდინარე" class="py-4">
         <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
           @for (assignment of pendingAssignments$ | async; track assignment.id)
           {
           <li
-            class="p-5 rounded-xl flex justify-between shadow-xl h-[220px]"
+            class="p-5 rounded-xl flex flex-col sm:flex-row justify-between shadow-xl h-auto sm:h-[220px] gap-3"
             [ngClass]="{
               'bg-blue-50': selectedAssignment?.id === assignment.id,
               'bg-white': selectedAssignment?.id !== assignment.id
             }"
           >
-            <div class="flex flex-col gap-2 w-3/4 overflow-hidden">
+            <div class="flex flex-col gap-2 w-full sm:w-3/4 overflow-hidden">
               <h1 class="font-semibold text-lg">
                 {{ assignment.subject.name }}
               </h1>
-              <p class="text-gray-600 border-b pb-2 border-gray-200">
+              <p
+                class="text-gray-600 border-b pb-2 border-gray-200 text-sm sm:text-base"
+              >
                 ⏰ {{ assignment.deadline | date : "shortDate" }} -
                 {{ assignment.deadlineTime | date : "shortTime" }}
               </p>
+
               <p
                 class="text-gray-600 text-sm line-clamp-3 p-1 px-3 pb-1 rounded-xl"
                 [innerHTML]="assignment.description"
               ></p>
-              @if(assignment.type){
-              <p class="text-gray-800 font-bold mt-2">
+
+              @if (assignment.type) {
+              <p class="text-gray-800 font-bold mt-1 text-sm sm:text-base">
                 {{ assignment.type }}
               </p>
               }
             </div>
 
-            <div class="flex flex-col justify-between h-full items-end">
+            <div
+              class="flex sm:flex-col justify-between sm:justify-start h-auto sm:h-full items-end gap-3"
+            >
               <div class="flex gap-2">
                 <button
                   class="edit-btn"
@@ -47,8 +53,8 @@
                 </button>
               </div>
 
-              <div class="w-full flex flex-row items-center">
-                <p class="self-center mr-[-4px]">შესრულებული</p>
+              <div class="flex items-center gap-2 sm:mt-auto">
+                <p class="text-sm">შესრულებული</p>
                 <mat-checkbox
                   (change)="markCompleted(assignment)"
                 ></mat-checkbox>
@@ -61,35 +67,41 @@
 
       <mat-tab label="დასრულებული">
         <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
-          @for(assignment of completedAssignments$ | async; track assignment.id)
-          {
+          @for (assignment of completedAssignments$ | async; track
+          assignment.id) {
           <li
-            class="p-5 rounded-xl flex justify-between shadow-xl h-[220px]"
+            class="p-5 rounded-xl flex flex-col sm:flex-row justify-between shadow-xl h-auto sm:h-[220px] gap-3"
             [ngClass]="{
               'bg-blue-50': selectedAssignment?.id === assignment.id,
               'bg-white': selectedAssignment?.id !== assignment.id
             }"
           >
-            <div class="flex flex-col gap-2 w-3/4 overflow-hidden">
+            <div class="flex flex-col gap-2 w-full sm:w-3/4 overflow-hidden">
               <h1 class="font-semibold text-lg">
                 {{ assignment.subject.name }}
               </h1>
-              <p class="text-gray-600 border-b pb-2 border-gray-200">
+              <p
+                class="text-gray-600 border-b pb-2 border-gray-200 text-sm sm:text-base"
+              >
                 ⏰ {{ assignment.deadline | date : "shortDate" }} -
                 {{ assignment.deadlineTime | date : "shortTime" }}
               </p>
+
               <p
                 class="text-gray-600 text-sm line-clamp-3 p-1 px-3 pb-1 rounded-xl"
                 [innerHTML]="assignment.description"
               ></p>
-              @if(assignment.type){
-              <p class="text-gray-800 font-bold mt-2">
+
+              @if (assignment.type) {
+              <p class="text-gray-800 font-bold mt-1 text-sm sm:text-base">
                 {{ assignment.type }}
               </p>
               }
             </div>
 
-            <div class="flex flex-col justify-between h-full items-end">
+            <div
+              class="flex sm:flex-col justify-between sm:justify-start h-auto sm:h-full items-end gap-3"
+            >
               <div class="flex gap-2">
                 <button
                   class="edit-btn"
@@ -105,8 +117,8 @@
                 </button>
               </div>
 
-              <div class="w-full flex flex-row items-center">
-                <p class="self-center mr-[-4px]">შესრულებული</p>
+              <div class="flex items-center gap-2 sm:mt-auto">
+                <p class="text-sm">შესრულებული</p>
                 <mat-checkbox
                   checked
                   (change)="markPending(assignment)"
@@ -121,14 +133,15 @@
 
     <button
       (click)="openaddAssignmentComponent(null)"
-      class="w-58 primary-btn mt-8"
+      class="w-58 primary-btn flex self-center justify-center m-8"
       [disabled]="showAddAssignment && !selectedAssignment"
     >
-      + დავალების დამატება
+      <span class="mr-4">+</span> დავალების დამატება
     </button>
   </div>
-  <div class="w-1/2">
-    @if(showAddAssignment){
+
+  <div class="w-full lg:w-1/2">
+    @if (showAddAssignment) {
     <app-add-assignment
       [assignmentData]="selectedAssignment"
       (closeAddAssignmentEvent)="closeAssignmentAdd()"

@@ -1,0 +1,81 @@
+<div class="p-4 md:p-6 space-y-8">
+  <div class="flex flex-col xl:flex-row justify-between gap-6">
+    <div class="flex flex-col gap-6 w-full xl:w-[45%]">
+      <mat-card
+        class="p-6 flex justify-between items-center shadow-md w-full min-h-[120px]"
+      >
+        <div>
+          <h2 class="text-xl sm:text-2xl font-semibold">
+            გამარჯობა, {{ (userProfile$ | async)?.firstName || "სტუდენტო" }} 👋
+          </h2>
+          <p class="text-gray-500 text-sm sm:text-base">
+            {{ today | date : "EEEE, d MMMM yyyy" }}
+          </p>
+        </div>
+      </mat-card>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <mat-card class="p-4 text-center shadow-sm flex flex-col items-center">
+          <h3 class="text-2xl font-bold text-[#60a5fa]">{{ classCount }}</h3>
+          <p class="text-gray-500 text-sm sm:text-base">კლასები</p>
+        </mat-card>
+        <mat-card class="p-4 text-center shadow-sm flex flex-col items-center">
+          <h3 class="text-2xl font-bold text-[#34d399]">{{ taskCount }}</h3>
+          <p class="text-gray-500 text-sm sm:text-base">დავალებები</p>
+        </mat-card>
+        <mat-card class="p-4 text-center shadow-sm flex flex-col items-center">
+          <h3 class="text-2xl font-bold text-[#f87171]">{{ examCount }}</h3>
+          <p class="text-gray-500 text-sm sm:text-base">გამოცდები</p>
+        </mat-card>
+      </div>
+    </div>
+    <mat-card class="p-6 flex-1 shadow-md min-h-[300px]">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-semibold text-lg text-gray-700">
+          აქტივობების სტატისტიკა
+        </h3>
+      </div>
+
+      <div class="w-full overflow-x-auto">
+        <canvas
+          baseChart
+          [data]="barChartData"
+          [options]="barChartOptions"
+          [type]="'bar'"
+          class="h-76"
+        ></canvas>
+      </div>
+    </mat-card>
+  </div>
+
+  <mat-card class="p-6">
+    <h3 class="font-semibold text-lg text-gray-700 mb-4">მომავალი მოვლენები</h3>
+    <ul class="space-y-3 max-h-[250px] overflow-y-auto">
+      @for (event of upcomingEvents; track event.title) {
+      <li
+        class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200 pb-2"
+      >
+        <div class="flex flex-col">
+          <p class="font-medium text-gray-700 text-base sm:text-lg">
+            {{ event.title }}
+          </p>
+          <p class="text-sm text-gray-500 flex items-center gap-2 mt-1 sm:mt-0">
+            <span
+              class="w-2 h-2 rounded-full"
+              [ngClass]="{
+                'bg-[#60a5fa]': event.type === 'კლასი',
+                'bg-[#34d399]': event.type === 'დავალება',
+                'bg-[#f87171]': event.type === 'გამოცდა'
+              }"
+            ></span>
+            {{ event.type }}
+          </p>
+        </div>
+        <span class="text-sm text-gray-400 m-1">
+          {{ event.start | date : "MMM d, HH:mm" }}
+        </span>
+      </li>
+      }
+    </ul>
+  </mat-card>
+</div>

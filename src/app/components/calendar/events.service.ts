@@ -59,9 +59,10 @@ export class EventsService {
 
         return {
           title: data.subject?.name ?? 'Untitled',
+          description: data.description,
           type: 'დავალება',
           start,
-          backgroundColor: '#007bff',
+          backgroundColor: '#34d399',
         };
       })
       .filter(Boolean) as CalendarEvent[];
@@ -80,10 +81,11 @@ export class EventsService {
         type: 'გამოცდა',
         start,
         end,
-        backgroundColor: '#ff9800',
+        backgroundColor: '#f87171',
         duration: data.duration,
         location: data.location,
         room: data.room,
+        description: data.description,
       };
     });
 
@@ -111,7 +113,7 @@ export class EventsService {
         type: 'კლასი',
         start,
         end,
-        backgroundColor: '#4caf50',
+        backgroundColor: '#60a5fa',
         recurrence: data.recurrence,
         weekDays: data.weekDays,
         mode: data.mode,

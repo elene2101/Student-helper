@@ -1,21 +1,21 @@
-<div class="flex gap-8 p-6 h-full">
-  <div class="w-1/2 flex flex-col h-full">
+<div class="flex flex-col lg:flex-row gap-8 p-4 md:p-6 overflow-hidden">
+  <div class="w-full lg:w-1/2 flex flex-col h-full shadow-md rounded-xl">
     <mat-tab-group class="flex-1 overflow-hidden">
       <mat-tab label="მიმდინარე">
         <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
           @for (exam of upcomingExams$ | async; track exam.id) {
           <li
-            class="p-5 rounded-xl flex justify-between shadow-xl h-[230px]"
+            class="p-5 rounded-xl flex flex-col sm:flex-row justify-between shadow-xl h-auto sm:h-[230px] gap-3"
             [ngClass]="{
               'bg-blue-50': selectedExam?.id === exam.id,
               'bg-white': selectedExam?.id !== exam.id
             }"
           >
-            <div class="flex flex-col gap-2 w-3/4 overflow-hidden">
+            <div class="flex flex-col gap-2 w-full sm:w-3/4 overflow-hidden">
               <h1 class="font-semibold text-lg">
                 {{ exam.subject.name }}
               </h1>
-              <p class="text-gray-600 border-b pb-2 border-gray-200">
+              <p class="text-gray-600 border-b pb-2 border-gray-200 text-sm">
                 📅 {{ exam.date | date : "shortDate" }} -
                 {{ exam.time | date : "shortTime" }}
               </p>
@@ -26,26 +26,26 @@
                 [innerHTML]="exam.description"
               ></p>
               }
-              <p class="text-gray-800 mt-2">
+              <p class="text-gray-800 mt-2 text-sm sm:text-base">
                 {{ exam.location === locationType.Online ? "💻" : "🏫" }}
                 {{ exam.location }}
               </p>
               @if(exam.type){
-              <p class="text-gray-800 font-bold mt-[-4px]">
+              <p class="text-gray-800 font-bold mt-[-4px] text-sm sm:text-base">
                 {{ exam.type }}
               </p>
               }
             </div>
 
-            <div class="flex flex-col justify-between h-full items-end">
-              <div class="flex gap-2">
-                <button class="edit-btn" (click)="openAddExamComponent(exam)">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button class="delete-btn" (click)="deleteExam(exam)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
+            <div
+              class="flex sm:flex-col justify-between sm:justify-start h-auto sm:h-full items-end sm:items-end gap-2"
+            >
+              <button class="edit-btn" (click)="openAddExamComponent(exam)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button class="delete-btn" (click)="deleteExam(exam)">
+                <mat-icon>delete</mat-icon>
+              </button>
             </div>
           </li>
           }
@@ -56,17 +56,17 @@
         <ul class="space-y-4 p-4 pb-12 max-h-[600px] overflow-y-auto">
           @for (exam of completedExams$ | async; track exam.id) {
           <li
-            class="p-5 rounded-xl flex justify-between shadow-xl h-[230px]"
+            class="p-5 rounded-xl flex flex-col sm:flex-row justify-between shadow-xl h-auto sm:h-[230px] gap-3"
             [ngClass]="{
               'bg-blue-50': selectedExam?.id === exam.id,
               'bg-white': selectedExam?.id !== exam.id
             }"
           >
-            <div class="flex flex-col gap-2 w-3/4 overflow-hidden">
+            <div class="flex flex-col gap-2 w-full sm:w-3/4 overflow-hidden">
               <h1 class="font-semibold text-lg">
                 {{ exam.subject.name }}
               </h1>
-              <p class="text-gray-600 border-b pb-2 border-gray-200">
+              <p class="text-gray-600 border-b pb-2 border-gray-200 text-sm">
                 📅 {{ exam.date | date : "shortDate" }} -
                 {{ exam.time | date : "shortTime" }}
               </p>
@@ -77,26 +77,26 @@
                 [innerHTML]="exam.description"
               ></p>
               }
-              <p class="text-gray-800 mt-2">
+              <p class="text-gray-800 mt-2 text-sm sm:text-base">
                 {{ exam.location === locationType.Online ? "💻" : "🏫" }}
                 {{ exam.location }}
               </p>
               @if(exam.type){
-              <p class="text-gray-800 font-bold mt-[-4px]">
+              <p class="text-gray-800 font-bold mt-[-4px] text-sm sm:text-base">
                 {{ exam.type }}
               </p>
               }
             </div>
 
-            <div class="flex flex-col justify-between h-full items-end">
-              <div class="flex gap-2">
-                <button class="edit-btn" (click)="openAddExamComponent(exam)">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button class="delete-btn" (click)="deleteExam(exam)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
+            <div
+              class="flex sm:flex-col justify-between sm:justify-start h-auto sm:h-full items-end sm:items-end gap-2"
+            >
+              <button class="edit-btn" (click)="openAddExamComponent(exam)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button class="delete-btn" (click)="deleteExam(exam)">
+                <mat-icon>delete</mat-icon>
+              </button>
             </div>
           </li>
           }
@@ -106,14 +106,14 @@
 
     <button
       (click)="openAddExamComponent(null)"
-      class="w-58 primary-btn mt-2"
+      class="w-58 primary-btn flex self-center justify-center m-8"
       [disabled]="showAddExam && !selectedExam"
     >
-      + გამოცდის დამატება
+      <span class="mr-4">+</span> გამოცდის დამატება
     </button>
   </div>
 
-  <div class="w-1/2">
+  <div class="w-full lg:w-1/2">
     @if(showAddExam){
     <app-add-exam
       [examData]="selectedExam"

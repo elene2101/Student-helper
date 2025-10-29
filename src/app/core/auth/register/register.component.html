@@ -1,57 +1,70 @@
-<form
-  class="registration-form"
-  [formGroup]="registrationForm"
-  (ngSubmit)="register()"
->
-  <h2 class="form-title">რეგისტრაცია</h2>
+<div class="w-full max-w-md px-6 md:px-10">
+  <div class="text-center mb-10">
+    <h2 class="text-3xl font-semibold text-[#4E4E83]">Student Helper</h2>
+    <p class="text-gray-500 mt-1">შექმენი ანგარიში</p>
+  </div>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>სახელი</mat-label>
-    <input matInput type="text" formControlName="firstName" />
-    @if(firstName?.hasError('required')){
-    <mat-error class="error-text">სახელი აუცილებელია</mat-error>
-    }
-  </mat-form-field>
-
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>გვარი</mat-label>
-    <input matInput type="text" formControlName="lastName" />
-    @if(lastName?.hasError('required')){
-    <mat-error class="error-text">გვარი აუცილებელია</mat-error>
-    }
-  </mat-form-field>
-
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>მეილი</mat-label>
-    <input matInput type="email" formControlName="email" />
-    @if(email?.hasError('required')){
-    <mat-error class="error-text">მეილი აუცილებელია</mat-error>
-    }@else if(email?.hasError('email')){
-    <mat-error class="error-text">შეიყვანეთ სწორი მეილი</mat-error>}
-  </mat-form-field>
-
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>პაროლი</mat-label>
-    <input matInput type="password" formControlName="password" />
-    @if(password?.hasError('required')){
-    <mat-error class="error-text">პაროლი აუცილებელია</mat-error>
-    } @else if(password?.hasError('minlength')){
-    <mat-error class="error-text">პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო</mat-error
-    >}
-  </mat-form-field>
-
-  <button
-    mat-raised-button
-    color="primary"
-    class="full-width"
-    [disabled]="!registrationForm.valid"
+  <form
+    [formGroup]="registrationForm"
+    (ngSubmit)="register()"
+    class="space-y-5"
   >
-    რეგისტრაცია
-  </button>
+    <mat-form-field appearance="outline" class="w-full rounded-lg">
+      <input
+        matInput
+        type="text"
+        formControlName="firstName"
+        placeholder="სახელი"
+      />
+    </mat-form-field>
 
-  <a routerLink="/login">უკვე გაქვთ ანგარიში? შესვლა</a>
+    <mat-form-field appearance="outline" class="w-full rounded-lg">
+      <input
+        matInput
+        type="text"
+        formControlName="lastName"
+        placeholder="გვარი"
+      />
+    </mat-form-field>
 
-  @if(error){
-  <p class="error-text" class="error-text">{{ error }}</p>
-  }
-</form>
+    <mat-form-field appearance="outline" class="w-full rounded-lg">
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        placeholder="მეილი"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full rounded-lg">
+      <input
+        matInput
+        type="password"
+        formControlName="password"
+        placeholder="პაროლი"
+      />
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      class="w-full"
+      [disabled]="!registrationForm.valid"
+    >
+      რეგისტრაცია
+    </button>
+
+    <div class="text-center text-sm text-gray-600">
+      უკვე გაქვთ ანგარიში?
+      <a
+        routerLink="/login"
+        class="ml-1 text-[#4E4E83] font-semibold hover:underline"
+        >შესვლა</a
+      >
+    </div>
+
+    @if(error){
+    <p class="text-red-600 text-center text-sm">{{ error }}</p>
+    }
+  </form>
+</div>

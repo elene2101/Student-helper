@@ -1,18 +1,31 @@
+@if(showHeaderAndMenu){
 <div class="flex flex-col h-screen">
-  @if(showHeaderAndMenu){
   <app-header class="fixed top-0 w-full z-50"></app-header>
-  }
-  <div class="flex pt-24 w-full">
-    @if(showHeaderAndMenu){
-
-    <app-side-menu class="side-menu-container transition-all duration-300 z-10">
-    </app-side-menu>
-    }
-
-    <main class="flex-1 overflow-x-hidden transition-all duration-300">
-      <div class="content-wrapper">
-        <router-outlet></router-outlet>
-      </div>
-    </main>
+  <div class="pt-24 h-full">
+    <app-side-menu class="side-menu-container"></app-side-menu>
   </div>
 </div>
+} @else {
+<div class="auth-page flex flex-col md:flex-row h-screen">
+  <div
+    class="flex justify-center md:flex w-2/3 bg-[url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center relative"
+  >
+    <div class="absolute inset-0 bg-[#4E4E83]/75 backdrop-blur-[1px]"></div>
+    <div
+      class="relative z-10 flex flex-col justify-center items-center text-white px-10"
+    >
+      <h1 class="text-4xl font-bold mb-3">Student Helper</h1>
+      <p class="text-lg text-gray-200 max-w-md text-center leading-relaxed">
+        ორგანიზება, დროის მართვა და აკადემიური პროგრესი — ყველაფერი ერთ აპში 📘
+        შენი ციფრული უნივერსიტეტის პარტნიორი.
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="flex w-full md:w-1/2 justify-center items-center bg-gradient-to-br from-white to-gray-50"
+  >
+    <router-outlet></router-outlet>
+  </div>
+</div>
+}

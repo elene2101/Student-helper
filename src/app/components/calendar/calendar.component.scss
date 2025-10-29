@@ -1,0 +1,108 @@
+:host ::ng-deep .fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 6px;
+}
+
+:host ::ng-deep .fc .fc-button-group {
+  display: flex;
+  gap: 6px;
+}
+
+:host ::ng-deep .fc-toolbar-chunk {
+  display: flex;
+}
+
+:host ::ng-deep .fc-button {
+  background-color: var(--primary-color);
+  color: white !important;
+  border: none !important;
+  border-radius: 12rem !important;
+  font-weight: 500;
+  padding: 6px 14px !important;
+  transition: background-color 0.2s ease;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .fc-button:hover {
+  background-color: var(--primary-light-color) !important;
+}
+
+:host ::ng-deep .fc-button:disabled:hover {
+  background-color: #2c3e50;
+}
+
+:host ::ng-deep .fc-timeGridWeek-button.fc-button-active,
+:host ::ng-deep .fc-timeGridDay-button.fc-button-active {
+  background-color: #3d3d5d !important;
+  color: #fff !important;
+}
+
+:host ::ng-deep .fc-prev-button.fc-button-active,
+:host ::ng-deep .fc-next-button.fc-button-active,
+:host ::ng-deep .fc-today-button.fc-button-active {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+:host {
+  display: block;
+  padding: 1rem;
+}
+
+:host ::ng-deep .fc-col-header-cell {
+  background-color: #f5f7fb;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: none !important;
+}
+
+:host ::ng-deep .fc-timegrid-axis {
+  background-color: #f5f7fb;
+  font-weight: 500;
+}
+:host ::ng-deep .fc .fc-timegrid-slot-label-cushion {
+  color: var(--primary-color) !important;
+}
+
+:host ::ng-deep .fc-timegrid-slot {
+  height: 1.8rem !important;
+  border-color: #e0e0e0 !important;
+}
+
+:host ::ng-deep .fc-timegrid-slot-lane {
+  transition: background-color 0.15s ease;
+}
+
+:host ::ng-deep .fc-event {
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 4px 6px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  color: white !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+:host ::ng-deep .fc-event:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+:host ::ng-deep .fc-day-today {
+  background: #f5f7fb !important;
+}
+
+:host ::ng-deep .fc-event {
+  border: 2px solid #fff !important;
+  box-sizing: border-box;
+}
+:host ::ng-deep .fc-event-title {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: block !important;
+}
