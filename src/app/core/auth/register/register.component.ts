@@ -46,8 +46,8 @@ export class RegisterComponent {
     return this.registrationForm.get('password');
   }
 
-  public async register() {
-    if (!this.registrationForm.valid) return;
+  public async register(): Promise<void> {
+    if (this.registrationForm.invalid) return;
 
     this.error = null;
 
