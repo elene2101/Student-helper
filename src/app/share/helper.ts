@@ -16,7 +16,7 @@ export function buildRRule(
   endDate: Date,
   weekDays?: string[]
 ) {
-  if (recurrence === 'none') return undefined; // no recurrence
+  if (recurrence === 'none') return undefined;
 
   const rule: any = {
     freq:
