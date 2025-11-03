@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import {
   FormControl,
@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject as RxSubject } from 'rxjs';
 import { SubjectsService } from './subject.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatInputModule } from '@angular/material/input';
@@ -26,10 +26,11 @@ import { Subject } from '../classes.model';
   templateUrl: './subjects.component.html',
   styleUrls: ['./subjects.component.scss'],
 })
-export class SubjectsComponent {
+export class SubjectsComponent implements OnDestroy {
   private toast = inject(ToastrService);
   private subjectsService = inject(SubjectsService);
 
+  private readonly destroy$ = new RxSubject<void>();
   public subjects$: Observable<Subject[]> = this.subjectsService.getSubjects$();
 
   public showAddInput = false;
@@ -42,12 +43,12 @@ export class SubjectsComponent {
     name: new FormControl('', Validators.required),
   });
 
-  public toggleAddInput() {
+  public toggleAddInput(): void {
     this.showAddInput = !this.showAddInput;
     this.newSubjectForm.reset();
   }
 
-  public addSubject() {
+  public addSubject(): void {
     if (this.newSubjectForm.invalid) return;
     try {
       const value = this.newSubjectForm.value.name!;
@@ -60,12 +61,12 @@ export class SubjectsComponent {
     }
   }
 
-  public startEdit(subject: Subject) {
+  public startEdit(subject: Subject): void {
     this.editingId = subject.id!;
     this.editForm.patchValue({ name: subject.name });
   }
 
-  public saveEdit(subject: Subject) {
+  public saveEdit(subject: Subject): void {
     if (this.editForm.invalid) return;
     try {
       this.subjectsService.updateSubject(
@@ -79,11 +80,11 @@ export class SubjectsComponent {
     }
   }
 
-  public cancelEdit() {
+  public cancelEdit(): void {
     this.editingId = null;
   }
 
-  public deleteSubject(subject: Subject) {
+  public deleteSubject(subject: Subject): void {
     if (!subject.id) return;
 
     try {
@@ -92,5 +93,16 @@ export class SubjectsComponent {
       this.toast.error('საგნის წაშლა ვერ მოხერხდა');
       console.error(err);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    this.newSubjectForm.reset();
+    this.editForm.reset();
+
+    this.showAddInput = false;
+    this.editingId = null;
   }
 }

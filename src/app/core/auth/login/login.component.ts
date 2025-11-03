@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -19,10 +20,12 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
-  private auth = inject(AuthService);
-  private router = inject(Router);
-  private fb = inject(FormBuilder);
+export class LoginComponent implements OnDestroy {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+
+  private readonly destroy$ = new Subject<void>();
 
   public loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -38,8 +41,8 @@ export class LoginComponent {
     return this.loginForm.get('password');
   }
 
-  public async login() {
-    if (!this.loginForm.valid) return;
+  public async login(): Promise<void> {
+    if (this.loginForm.invalid) return;
 
     this.error = null;
 
@@ -53,5 +56,13 @@ export class LoginComponent {
       console.error(err);
       this.error = this.auth.mapFirebaseError(err);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    this.loginForm.reset();
+    this.error = null;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,17 +7,20 @@ import { BarChartData, BarChartOptions } from './dashboard.model';
 import { EventsService } from '../calendar/events.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { CalendarEvent } from '../calendar/calendar.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, MatCardModule, MatIconModule, BaseChartDirective],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss',
+  styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit, OnDestroy {
   private readonly eventsService = inject(EventsService);
   private readonly authService = inject(AuthService);
+
+  private readonly destroy$ = new Subject<void>();
 
   public userProfile$ = this.authService.userProfile$;
   public today = new Date();
@@ -51,7 +54,7 @@ export class DashboardComponent {
       .slice(0, 5);
   }
 
-  private updateWeeklyStats() {
+  private updateWeeklyStats(): void {
     const startOfWeek = this.getStartOfWeek(new Date());
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 7);
@@ -147,9 +150,10 @@ export class DashboardComponent {
         { ...this.barChartData.datasets[2], data: weekData.exams },
       ],
     };
-    weekData.classes.map((count) => (this.classCount += count));
-    weekData.tasks.filter((count) => (this.taskCount += count));
-    weekData.exams.map((count) => (this.examCount += count));
+
+    this.classCount = weekData.classes.reduce((a, b) => a + b, 0);
+    this.taskCount = weekData.tasks.reduce((a, b) => a + b, 0);
+    this.examCount = weekData.exams.reduce((a, b) => a + b, 0);
   }
 
   private isSameDay(a: Date, b: Date): boolean {
@@ -196,5 +200,15 @@ export class DashboardComponent {
 
   private isInWeek(date: Date, start: Date, end: Date): boolean {
     return date >= start && date < end;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    this.events = [];
+    this.upcomingEvents = [];
+
+    this.barChartData = { ...this.barChartData, datasets: [] };
   }
 }

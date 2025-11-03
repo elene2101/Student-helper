@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  output,
+  SimpleChanges,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -16,7 +24,14 @@ import {
 } from '../assignments.model';
 import { AssignmentsService } from '../assignment.service';
 import { Subject } from '../../classes/classes.model';
-import { combineLatest, map, Observable, startWith } from 'rxjs';
+import {
+  combineLatest,
+  map,
+  Observable,
+  startWith,
+  Subject as RxSubject,
+  takeUntil,
+} from 'rxjs';
 import { SubjectsService } from '../../classes/subjects/subject.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -45,7 +60,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './add-assignment.component.html',
   styleUrls: ['./add-assignment.component.scss'],
 })
-export class AddAssignmentComponent {
+export class AddAssignmentComponent implements OnInit, OnDestroy {
   public assignmentData = input<Assignment | null>(null);
   public closeAddAssignmentEvent = output();
 
@@ -53,6 +68,8 @@ export class AddAssignmentComponent {
   private assignmentsService = inject(AssignmentsService);
   private subjectsService = inject(SubjectsService);
   private toast = inject(ToastrService);
+
+  private readonly destroy$ = new RxSubject<void>();
 
   public assignmentsType = AssignmentsType;
   public quillModules = QuillModules;
@@ -90,7 +107,8 @@ export class AddAssignmentComponent {
         subjects.filter((s) =>
           s.name.toLowerCase().includes((filterValue || '').toLowerCase())
         )
-      )
+      ),
+      takeUntil(this.destroy$)
     );
   }
 
@@ -108,18 +126,13 @@ export class AddAssignmentComponent {
       if (this.assignmentData()?.id) {
         this.assignmentsService
           .updateAssignment(this.assignmentData()?.id || '', assignmentPayload)
-          .then(() => {
-            this.toast.success('დავალება წარმატებით განახლდა');
-          });
-        this.closeAddAssignment();
+          .then(() => this.toast.success('დავალება წარმატებით განახლდა'));
       } else {
         this.assignmentsService
           .addAssignment(assignmentPayload as Assignment)
-          .then(() => {
-            this.toast.success('დავალება წარმატებით დაემატა');
-          });
-        this.closeAddAssignment();
+          .then(() => this.toast.success('დავალება წარმატებით დაემატა'));
       }
+      this.closeAddAssignment();
     } catch (err) {
       console.error('შენახვის შეცდომა:', err);
       this.toast.error('დავალების დამატება ვერ მოხერხდა');
@@ -137,5 +150,15 @@ export class AddAssignmentComponent {
     o2: { id: number; name: string }
   ): boolean {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    this.assignmentForm.reset();
+    this.subjectFilterCtrl.reset();
+
+    this.isLoading = false;
   }
 }

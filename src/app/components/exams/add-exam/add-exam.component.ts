@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -14,8 +22,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTimepickerModule } from '@angular/material/timepicker';
-import { combineLatest, map, Observable, startWith } from 'rxjs';
-import { Subject } from '../../classes/classes.model';
+import {
+  combineLatest,
+  map,
+  Observable,
+  startWith,
+  Subject,
+  takeUntil,
+} from 'rxjs';
+import { Subject as SubjectModel } from '../../classes/classes.model';
 import { SubjectsService } from '../../classes/subjects/subject.service';
 import { ExamsService } from '../exams.service';
 import { ToastrService } from 'ngx-toastr';
@@ -42,18 +57,21 @@ import { QuillModule } from 'ngx-quill';
   templateUrl: './add-exam.component.html',
   styleUrls: ['./add-exam.component.scss'],
 })
-export class AddExamComponent {
-  examData = input<Exam | null>(null);
+export class AddExamComponent implements OnInit, OnDestroy {
+  public examData = input<Exam | null>(null);
   public closeAddExamEvent = output();
+
+  private readonly fb = inject(FormBuilder);
+  private readonly examsService = inject(ExamsService);
+  private readonly subjectsService = inject(SubjectsService);
+  private readonly toast = inject(ToastrService);
+
+  private readonly destroy$ = new Subject<void>();
+
   public quillModules = QuillModules;
 
-  private fb = inject(FormBuilder);
-  private examsService = inject(ExamsService);
-  private subjectsService = inject(SubjectsService);
-  private toast = inject(ToastrService);
-
-  public subjects$!: Observable<Subject[]>;
-  public filteredSubjects$!: Observable<Subject[]>;
+  public subjects$!: Observable<SubjectModel[]>;
+  public filteredSubjects$!: Observable<SubjectModel[]>;
   public subjectFilterCtrl = new FormControl('');
 
   public examTypes = ['გამოცდა', 'ქვიზი'];
@@ -84,19 +102,23 @@ export class AddExamComponent {
         subjects.filter((s) =>
           s.name.toLowerCase().includes((filterValue || '').toLowerCase())
         )
-      )
+      ),
+      takeUntil(this.destroy$)
     );
 
-    this.examForm.get('location')?.valueChanges.subscribe((loc) => {
-      const roomCtrl = this.examForm.get('room');
-      if (loc === 'კამპუსში') {
-        roomCtrl?.addValidators(Validators.required);
-      } else {
-        roomCtrl?.clearValidators();
-        roomCtrl?.setValue('');
-      }
-      roomCtrl?.updateValueAndValidity();
-    });
+    this.examForm
+      .get('location')
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe((loc) => {
+        const roomCtrl = this.examForm.get('room');
+        if (loc === 'კამპუსში') {
+          roomCtrl?.addValidators(Validators.required);
+        } else {
+          roomCtrl?.clearValidators();
+          roomCtrl?.setValue('');
+        }
+        roomCtrl?.updateValueAndValidity();
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -107,38 +129,34 @@ export class AddExamComponent {
     }
   }
 
-  public saveExam() {
+  public saveExam(): void {
     if (this.examForm.invalid) return;
     this.isLoading = true;
 
     const formValue = this.examForm.value;
-    const payload: Partial<Exam> | any = {
-      ...formValue,
-    };
+    const payload: Partial<Exam> | any = { ...formValue };
 
     try {
       if (this.examData()?.id) {
         this.examsService
           .updateExam(this.examData()?.id || '', payload)
-          .then(() => {
-            this.toast.success('გამოცდა წარმატებით განახლდა');
-          });
-        this.closeExamAdd();
+          .then(() => this.toast.success('გამოცდა წარმატებით განახლდა'))
+          .finally(() => (this.isLoading = false));
       } else {
-        this.examsService.addExam(payload as Exam).then(() => {
-          this.toast.success('გამოცდა წარმატებით დაემატა');
-        });
-        this.closeExamAdd();
+        this.examsService
+          .addExam(payload as Exam)
+          .then(() => this.toast.success('გამოცდა წარმატებით დაემატა'))
+          .finally(() => (this.isLoading = false));
       }
+      this.closeExamAdd();
     } catch (err) {
       console.error('შენახვის შეცდომა:', err);
       this.toast.error('გამოცდის შენახვა ვერ მოხერხდა');
-    } finally {
       this.isLoading = false;
     }
   }
 
-  public closeExamAdd() {
+  public closeExamAdd(): void {
     this.closeAddExamEvent.emit();
   }
 
@@ -147,5 +165,15 @@ export class AddExamComponent {
     o2: { id: number; name: string }
   ): boolean {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    this.examForm.reset();
+    this.subjectFilterCtrl.reset();
+
+    this.isLoading = false;
   }
 }

@@ -1,14 +1,15 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import rrulePlugin from '@fullcalendar/rrule';
 import { CalendarOptions } from '@fullcalendar/core';
 import { EventsService } from './events.service';
-import rrulePlugin from '@fullcalendar/rrule';
-import timeGridPlugin from '@fullcalendar/timegrid';
 import { MatDialog } from '@angular/material/dialog';
 import { EventDetailsDialogComponent } from './event-details-dialog/event-details-dialog.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -17,9 +18,12 @@ import { EventDetailsDialogComponent } from './event-details-dialog/event-detail
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit, OnDestroy {
   private eventsService = inject(EventsService);
   private dialog = inject(MatDialog);
+
+  private readonly destroy$ = new Subject<void>();
+  private activeDialogRef: any = null;
 
   calendarOptions: CalendarOptions = {
     timeZone: 'local',
@@ -37,8 +41,15 @@ export class CalendarComponent {
     eventClick: this.handleEventClick.bind(this),
   };
 
-  ngOnInit() {
-    this.eventsService.getUserEvents().then((events) => {
+  ngOnInit(): void {
+    this.loadEventsSafely();
+  }
+
+  private async loadEventsSafely() {
+    try {
+      const events = await this.eventsService.getUserEvents();
+      if (this.destroy$.isStopped) return;
+
       const formatted = events.map((e) => {
         const base = {
           title: e.title,
@@ -48,6 +59,7 @@ export class CalendarComponent {
             location: e.location,
             room: e.room,
             mode: e.mode,
+            description: e.description,
           },
         };
 
@@ -63,15 +75,19 @@ export class CalendarComponent {
           ...base,
           start: e.start,
           end: e.end,
-          description: e.description,
         };
       });
 
-      this.calendarOptions.events = formatted;
-    });
+      this.calendarOptions = {
+        ...this.calendarOptions,
+        events: formatted,
+      };
+    } catch (error) {
+      console.error('Error loading events:', error);
+    }
   }
 
-  public handleEventClick(info: any) {
+  public handleEventClick(info: any): void {
     const event = info.event;
     const data = {
       title: event.title,
@@ -84,10 +100,27 @@ export class CalendarComponent {
       description: event.extendedProps.description,
     };
 
-    this.dialog.open(EventDetailsDialogComponent, {
+    this.activeDialogRef = this.dialog.open(EventDetailsDialogComponent, {
       data,
       width: '400px',
       disableClose: false,
     });
+
+    this.activeDialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => (this.activeDialogRef = null));
+  }
+
+  ngOnDestroy(): void {
+    if (this.activeDialogRef) {
+      this.activeDialogRef.close();
+      this.activeDialogRef = null;
+    }
+
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    this.calendarOptions.events = [];
   }
 }

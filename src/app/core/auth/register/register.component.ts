@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -19,10 +20,12 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent {
-  private auth = inject(AuthService);
-  private router = inject(Router);
-  private fb = inject(FormBuilder);
+export class RegisterComponent implements OnDestroy {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+
+  private readonly destroy$ = new Subject<void>();
 
   public registrationForm = this.fb.group({
     firstName: ['', [Validators.required]],
@@ -72,5 +75,13 @@ export class RegisterComponent {
       console.error(err);
       this.error = this.auth.mapFirebaseError(err);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    this.registrationForm.reset();
+    this.error = null;
   }
 }

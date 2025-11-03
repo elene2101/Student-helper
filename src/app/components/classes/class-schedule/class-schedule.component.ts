@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -9,7 +9,15 @@ import {
   FormsModule,
   FormControl,
 } from '@angular/forms';
-import { combineLatest, map, Observable, startWith, take } from 'rxjs';
+import {
+  combineLatest,
+  map,
+  Observable,
+  startWith,
+  Subject as rxjsSubject,
+  take,
+  takeUntil,
+} from 'rxjs';
 import { SubjectsService } from '../subjects/subject.service';
 import { ClassSchedule, Subject, WeekDays } from '../classes.model';
 import { ClassScheduleService } from '../classes.service';
@@ -44,19 +52,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   ],
   templateUrl: './class-schedule.component.html',
 })
-export class ClassScheduleComponent {
+export class ClassScheduleComponent implements OnDestroy {
   private fb = inject(FormBuilder);
   private scheduleService = inject(ClassScheduleService);
   private subjectsService = inject(SubjectsService);
   private toast = inject(ToastrService);
   public dialogRef = inject(MatDialogRef<ClassScheduleComponent>);
 
+  private readonly destroy$ = new rxjsSubject<void>();
+
   public isLoading = false;
   public weekDays = WeekDays;
   public schedules$!: Observable<ClassSchedule[]>;
   public subjects$!: Observable<Subject[]>;
-  public subjectFilterCtrl: FormControl = new FormControl('');
   public filteredSubjects$!: Observable<Subject[]>;
+  public subjectFilterCtrl = new FormControl('');
   public minEndDate: Date | null = null;
   public maxStartDate: Date | null = null;
 
@@ -95,7 +105,8 @@ export class ClassScheduleComponent {
         subjects.filter((s) =>
           s.name.toLowerCase().includes((filterValue || '').toLowerCase())
         )
-      )
+      ),
+      takeUntil(this.destroy$)
     );
   }
 
@@ -103,7 +114,7 @@ export class ClassScheduleComponent {
     return this.scheduleForm.get('weekDays') as FormArray;
   }
 
-  public onDayToggle(dayKey: string, event: any) {
+  public onDayToggle(dayKey: string, event: any): void {
     const checked = event.checked;
     const weekDays = this.weekDaysArray;
     if (checked) {
@@ -114,7 +125,7 @@ export class ClassScheduleComponent {
     }
   }
 
-  public saveSchedule() {
+  public saveSchedule(): void {
     if (this.scheduleForm.invalid) {
       this.scheduleForm.markAllAsTouched();
       return;
@@ -138,7 +149,7 @@ export class ClassScheduleComponent {
 
     this.scheduleService
       .checkDuplicateActiveSchedule(formValue.subject)
-      .pipe(take(1))
+      .pipe(take(1), takeUntil(this.destroy$))
       .subscribe((exists) => {
         if (exists) {
           this.isLoading = false;
@@ -146,29 +157,27 @@ export class ClassScheduleComponent {
           return;
         }
 
-        const saveObservable = this.data?.id
+        const savePromise = this.data?.id
           ? this.scheduleService.updateSchedule(this.data.id, formValue)
           : this.scheduleService.addSchedule(formValue);
 
-        saveObservable
+        savePromise
           .then(() => this.dialogRef.close())
           .catch((err) => console.error('შენახვა ვერ მოხერხდა', err))
           .finally(() => (this.isLoading = false));
       });
   }
 
-  public onStartDateChange(start: Date) {
+  public onStartDateChange(start: Date): void {
     this.minEndDate = start;
-
     const end = this.scheduleForm.get('endDate')?.value;
     if (end && end < start) {
       this.scheduleForm.get('endDate')?.setValue(null);
     }
   }
 
-  public onEndDateChange(end: Date) {
+  public onEndDateChange(end: Date): void {
     this.maxStartDate = end;
-
     const start = this.scheduleForm.get('startDate')?.value;
     if (start && start > end) {
       this.scheduleForm.get('startDate')?.setValue(null);
@@ -185,12 +194,21 @@ export class ClassScheduleComponent {
   public startBeforeEndValidator(group: FormGroup) {
     const start = group.get('startTime')?.value;
     const end = group.get('endTime')?.value;
-
     if (!start || !end) return null;
 
     const startDate = new Date(start);
     const endDate = new Date(end);
-
     return startDate >= endDate ? { startAfterEnd: true } : null;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    this.scheduleForm.reset();
+    this.subjectFilterCtrl.reset();
+    this.isLoading = false;
+
+    this.dialogRef.close();
   }
 }
