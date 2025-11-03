@@ -15,7 +15,6 @@ import { By } from '@angular/platform-browser';
 import { ClassSchedule, Subject } from '../classes.model';
 import { provideNativeDateAdapter } from '@angular/material/core';
 
-// ---------- Mocks ----------
 const mockSubjects: Subject[] = [
   { id: '1', name: 'Math', isPublic: false },
   { id: '2', name: 'Physics', isPublic: true },
@@ -34,7 +33,6 @@ const mockSchedule: ClassSchedule = {
   mode: 'online',
 };
 
-// ---------- Stubs ----------
 const scheduleServiceStub = {
   getSchedules$: jasmine
     .createSpy('getSchedules$')
