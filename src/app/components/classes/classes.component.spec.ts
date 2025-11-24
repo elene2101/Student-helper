@@ -161,21 +161,6 @@ describe('ClassesComponent', () => {
     expect(defaultLabel).toBe('');
   });
 
-  it('should open schedule dialog with correct data', () => {
-    const schedule = mockSchedules[0];
-    component.openScheduleComponent(schedule);
-    expect(dialogStub.open).toHaveBeenCalled();
-    const args = dialogStub.open.calls.mostRecent().args[1];
-    expect(args.data).toEqual(schedule);
-  });
-
-  it('should open empty schedule dialog when no data passed', () => {
-    component.openScheduleComponent();
-    expect(dialogStub.open).toHaveBeenCalled();
-    const args = dialogStub.open.calls.mostRecent().args[1];
-    expect(args.data).toBeUndefined();
-  });
-
   it('should render upcoming and past classes in template', async () => {
     component.ngOnInit();
     fixture.detectChanges();

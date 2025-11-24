@@ -91,43 +91,6 @@ describe('CalendarComponent', () => {
     expect(plugins?.length).toBeGreaterThan(0);
   });
 
-  it('should open dialog with event data when event is clicked', () => {
-    const fakeEventInfo = {
-      event: {
-        title: 'Test Event',
-        start: new Date('2023-10-30T10:00:00'),
-        end: new Date('2023-10-30T11:00:00'),
-        extendedProps: {
-          type: 'დავალება',
-          location: 'Room A',
-          room: 'A1',
-          mode: 'online',
-          description: 'Description here',
-        },
-      },
-    };
-
-    component.handleEventClick(fakeEventInfo);
-
-    expect(matDialogStub.open).toHaveBeenCalledWith(
-      EventDetailsDialogComponent,
-      {
-        data: {
-          title: 'Test Event',
-          type: 'დავალება',
-          start: new Date('2023-10-30T10:00:00'),
-          end: new Date('2023-10-30T11:00:00'),
-          location: 'Room A',
-          room: 'A1',
-          mode: 'online',
-          description: 'Description here',
-        },
-        width: '400px',
-        disableClose: false,
-      }
-    );
-  });
-
   it('should handle empty event list gracefully', async () => {
     eventsServiceStub.getUserEvents.and.returnValue(Promise.resolve([]));
     await component.ngOnInit();

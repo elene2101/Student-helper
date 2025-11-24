@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  sendEmailVerification,
   UserInfo,
 } from '@angular/fire/auth';
 import { Firestore, doc, docData, setDoc } from '@angular/fire/firestore';
@@ -22,12 +23,35 @@ export class AuthService {
     switchMap((user) => (user?.uid ? this.getUserProfile$(user.uid) : of(null)))
   );
 
-  public register(email: string, password: string) {
-    return createUserWithEmailAndPassword(this.auth, email, password);
+  public async register(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) {
+    const cred = await createUserWithEmailAndPassword(
+      this.auth,
+      email,
+      password
+    );
+    await this.saveUserProfile(cred.user.uid, firstName, lastName, email);
+
+    await sendEmailVerification(cred.user, {
+      url: 'https://student-helper-df241.web.app/login',
+      handleCodeInApp: true,
+    });
+    return cred;
   }
 
-  public login(email: string, password: string) {
-    return signInWithEmailAndPassword(this.auth, email, password);
+  public async login(email: string, password: string) {
+    const cred = await signInWithEmailAndPassword(this.auth, email, password);
+
+    if (!cred.user.emailVerified) {
+      await signOut(this.auth);
+      throw new Error('გთხოვთ, გაიაროთ ვერიფიკაცია.');
+    }
+
+    return cred;
   }
 
   public logout() {

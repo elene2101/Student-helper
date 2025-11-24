@@ -6,26 +6,30 @@
   </div>
 </div>
 } @else {
-<div class="auth-page flex flex-col md:flex-row h-screen">
+<div class="auth-page flex flex-col md:flex-row min-h-screen">
   <div
-    class="flex justify-center md:flex w-2/3 bg-[url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center relative"
+    class="w-full md:w-2/3 flex justify-center items-center bg-[url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center relative min-h-[300px] md:min-h-full"
   >
     <div class="absolute inset-0 bg-[#4E4E83]/75 backdrop-blur-[1px]"></div>
+
     <div
-      class="relative z-10 flex flex-col justify-center items-center text-white px-10"
+      class="relative z-10 flex flex-col justify-center items-center text-white px-8 md:px-10 py-10"
     >
-      <h1 class="text-4xl font-bold mb-3">Student Helper</h1>
-      <p class="text-lg text-gray-200 max-w-md text-center leading-relaxed">
-        ორგანიზება, დროის მართვა და აკადემიური პროგრესი — ყველაფერი ერთ აპში 📘
+      <h1 class="text-3xl md:text-4xl font-bold mb-3">Student Helper</h1>
+      <p
+        class="text-md md:text-lg text-gray-200 max-w-md text-center leading-relaxed"
+      >
+        ორგანიზება, დროის მართვა და აკადემიური პროგრესი — ყველაფერი ერთ აპში.
         შენი ციფრული უნივერსიტეტის პარტნიორი.
       </p>
     </div>
   </div>
 
   <div
-    class="flex w-full md:w-1/2 justify-center items-center bg-gradient-to-br from-white to-gray-50"
+    class="w-full md:w-1/2 flex justify-center items-center bg-gradient-to-br from-white to-gray-50 py-10"
   >
     <router-outlet></router-outlet>
   </div>
 </div>
+
 }

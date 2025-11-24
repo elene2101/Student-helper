@@ -1,10 +1,10 @@
-import { Component, OnDestroy, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../auth.service';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { AuthService } from '../auth.service';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -12,49 +12,42 @@ import { Subject } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
-    RouterModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
   private readonly destroy$ = new Subject<void>();
 
+  public loading = false;
+  public error: string | null = null;
+
   public loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
 
-  public error: string | null = null;
-
-  get email() {
-    return this.loginForm.get('email');
-  }
-  get password() {
-    return this.loginForm.get('password');
-  }
-
-  public async login(): Promise<void> {
+  public async login() {
     if (this.loginForm.invalid) return;
-
     this.error = null;
+    this.loading = true;
 
-    const emailValue = this.email?.value || '';
-    const passwordValue = this.password?.value || '';
-
+    const { email, password } = this.loginForm.value;
     try {
-      await this.auth.login(emailValue, passwordValue);
+      await this.auth.login(email!, password!);
       this.router.navigate(['/dashboard']);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
       this.error = this.auth.mapFirebaseError(err);
+    } finally {
+      this.loading = false;
     }
   }
 

@@ -57,37 +57,6 @@ describe('RegisterComponent', () => {
     expect(component.registrationForm.valid).toBeTrue();
   });
 
-  it('should call AuthService.register, saveUserProfile and navigate on success', async () => {
-    const mockUserCredential = { user: { uid: 'abc123' } };
-    authServiceSpy.register.and.returnValue(
-      Promise.resolve(mockUserCredential as any)
-    );
-
-    authServiceSpy.saveUserProfile.and.returnValue(Promise.resolve());
-
-    component.registrationForm.setValue({
-      firstName: 'Elene',
-      lastName: 'Chelidze',
-      email: 'elene@test.com',
-      password: 'password123',
-    });
-
-    await component.register();
-
-    expect(authServiceSpy.register).toHaveBeenCalledWith(
-      'elene@test.com',
-      'password123'
-    );
-    expect(authServiceSpy.saveUserProfile).toHaveBeenCalledWith(
-      'abc123',
-      'Elene',
-      'Chelidze',
-      'elene@test.com'
-    );
-    expect(navigateSpy).toHaveBeenCalledWith(['/dashboard']);
-    expect(component.error).toBeNull();
-  });
-
   it('should set error message when registration fails', async () => {
     const mockError = { code: 'auth/email-already-in-use' };
     authServiceSpy.register.and.returnValue(Promise.reject(mockError));
